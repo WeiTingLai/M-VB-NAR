@@ -54,14 +54,30 @@ for(k in 1:replication)
   mspe_all[[k]]<-mspe
   
 }
+
+end.time<-proc.time()-start.time
+
 ## M-VAR-deGARCH
 ACC<-TPR_FPR_TCR(fit,coef_beta,p=5,Beta1,100,current=T)
+## M-VAR-deGARCH (excluding $A_0$)
+number<-c(1:m)
+for(i in 1:(m-1))
+{
+  number<-c(number,c(((i*(m*(p+1)))+1):((i*(m*(p+1)))+m)))
+}
+ACC1<-TPR_FPR_TCR(fit,coef_beta[,-number],p=5,Beta1[-c(1:m),],100,current=F)
+
 ## VAR-deGARCH
 #ACC<-TPR_FPR_TCR(fit,coef_beta,p=5,Beta1[-c(1:m),],100,current=F)
 
-end.time<-proc.time()-start.time
+
+## Average time
+end.time/replication
+
 ## Show TPR, FPR
 ACC
+## M-VAR-deGARCH (excluding $A_0$)
+ACC1
 
 ## Mean square prediction error
 mean(apply(sapply(1:100,function(k)apply(mspe_all[[k]],2,mean)),2,mean))
