@@ -10,6 +10,3 @@ Description: Tools for data analysis with modified VAR-deGARCH (M-VAR-deGARCH) m
              The input to our algorithm in predict.VB_NAR needs an output of the VB-NAR algorithm, matrix of testing data, and number of each testing time series. The output will be the estimate of multivariate time series, and the estimate of coefficient matrix.
              The input to our algorithm in TPR_FPR_TCR needs a true coefficient matrix, the estimate of the coefficient matrix, and the number of replications. The output will be TPR, FPR, TNR, TCR, the number of true active variables, and the mean estimate of active variables.
 
-NeedsCompilation: no
-
-
