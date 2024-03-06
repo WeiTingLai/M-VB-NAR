@@ -370,6 +370,7 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
         }
         
       }
+      # Median Probability Theory
       phi1<-lapply(1:(length(group)-1),function(j){phi_coef_pre[[j]][which(phi_coef_pre[[j]]>=.5)]<-phi_coef_pre[[j]][which(phi_coef_pre[[j]]>=.5)];phi_coef_pre[[j]][which(phi_coef_pre[[j]]<.5)]<-0;phi_coef_pre[[j]]})
       phi<- unlist(phi1)
       phi_real<-matrix(unlist(sapply(1:(p*m),function(j){A<-cbind(phi1[[2*j-1]],matrix(rep(phi1[[2*j]],segment_eachrow[[j]]),nrow=1));ifelse(j%%ncol(Y)!=0,ifelse(j%%ncol(Y)==1,list(A),{A[,c(1:(j%%ncol(Y)))]<-c(A[,c(2:(j%%ncol(Y)))],A[,1]);list(A)}),{A[,c(1:(ncol(Y)))]<-c(A[,c(2:(ncol(Y)))],A[,1]);list(A)})})),ncol=ncol(Y),byrow=T)
@@ -413,6 +414,7 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
     
     #================ Data setting =============================
     Y<-as.matrix(Y)
+    ## X=(Y_{t-1},...Y_{t-p}). If X is not given, X will be constructed automatically here.                                          
     if(is.null(X)){
       X1<-rep(0,p*m)
       for(j in 2:p)
@@ -425,9 +427,9 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
       
     }
     X<-as.matrix(X)
-    
+    ## Mu initial setting: If we do not have a mu initial, we will use the LS method to set the mu initial.
     if(missing(mu_initial)) {mu_initial<-ginv(crossprod(X, X))%*%crossprod(X,Y)}
-    if(missing(alpha_initial)) {alpha_initial=c(1,1) }
+    if(missing(alpha_initial)) {alpha_initial=c(0.5,0.5) }
     if(missing(sigma_initial)){sigma_initial<-var(Y)/2}
     if(missing(sigma_beta_initial)) {sigma_beta_initial<-sigma_initial}
     if(missing(phi_initial)){phi_initial<-matrix(c(rep(1,p*(m^2))),ncol=m) }
