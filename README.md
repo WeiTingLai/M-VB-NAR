@@ -6,8 +6,8 @@ All the simulation results can be reproduced by using this code.
 ```
 ## Read Data
 
-Beta<-as.matrix(read.table("D:/BetaCoef_m20.csv",sep=",",head=F))
-Data<-as.matrix(read.table("D:/Datam20_rep100.csv",sep=",",head=F))
+>Beta<-as.matrix(read.table("D:/BetaCoef_m20.csv",sep=",",head=F))
+>Data<-as.matrix(read.table("D:/Datam20_rep100.csv",sep=",",head=F))
 
 ## Set all the parameters:
 ```
