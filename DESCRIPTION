@@ -7,6 +7,6 @@ Maintainer: Wei-Ting Lai <kimki510343@gmail.com>
 Imports: ExPosition, alluvial
 Description: Tools for data analysis with modified VAR-deGARCH (M-VAR-deGARCH) models. Specifically, the function provides facilities for implementing general structural time series models, fitting them to multivariate time series data, and conducting feature selection on the regression component.
              The input to our algorithm in VB-NAR needs a matrix type of multivariate time series, group structure, and number of lag. The output will be the coefficient matrix, the probability of active variable, and the estimate of variance and covariance matrix.
-             The input to our algorithm in predict.VB_NAR needs an output of the VB-NAR algorithm, matrix of testing data, and number of each testing time series. The output will be the estimate of multivariate time series, and the estimate of coefficient matrix.
+             The input to our algorithm in predict.VB_NAR needs an output of the VB-NAR algorithm, matrix of testing data, rolling window size, and number of one step ahead in each testing time series. The output will be the estimate of multivariate time series, and the estimate of coefficient matrix.
              The input to our algorithm in TPR_FPR_TCR needs a true coefficient matrix, the estimate of the coefficient matrix, and the number of replications. The output will be TPR, FPR, TNR, TCR, the number of true active variables, and the mean estimate of active variables.
 
