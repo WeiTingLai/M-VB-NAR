@@ -25,7 +25,7 @@ adjma <- matrix(0,ncol=m,nrow=m)
 adjma[c(1:(m/2)),c((m/2+1):m)]<-1
 
 mspe_all <-as.list(NULL)
-sigma_hat<-matrix(0,nrow=100,ncol=m*m)
+sigma_hat<-matrix(0,nrow=replication,ncol=m*m)
 
 mspe=Y_hat<-NULL
 start.time<-proc.time()
