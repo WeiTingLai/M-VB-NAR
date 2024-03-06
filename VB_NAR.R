@@ -38,14 +38,14 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
     install.packages("MCMCpack")
   }
   library(MCMCpack)
-  #============ Functon =====================
+    #============ Functon =====================
   other_part<-function(j,s, item)
   {
     if(length(segment)==1)
     {
       item_new<-item[,(ifelse(j%%ncol(Y)!=0,j%%ncol(Y),ncol(Y)))]
     }else{
-      item_new<-as.matrix(item[,-(ifelse(j%%ncol(Y)!=0,j%%ncol(Y),ncol(Y)))][,-c((sum(segment_eachrow[[j]][c(1:s)])-(segment_eachrow[[j]][[s]])+1):sum(segment_eachrow[[j]][c(1:s)]))])
+      item_new<-item[,-(ifelse(j%%ncol(Y)!=0,j%%ncol(Y),ncol(Y)))][,-c((sum(segment_eachrow[[j]][c(1:s)])-(segment_eachrow[[j]][[s]])+1):sum(segment_eachrow[[j]][c(1:s)]))]
       if(ifelse(j%%ncol(Y)!=0,j%%ncol(Y),ncol(Y))>=sum(segment[c(1:s)]))
       {
         item_new<-cbind(item_new[,c(0:(ifelse(j%%ncol(Y)!=0,j%%ncol(Y),ncol(Y))-sum((segment_eachrow[[j]])[s])-1))],item[,(ifelse(j%%ncol(Y)!=0,j%%ncol(Y),ncol(Y)))],item_new[,unlist(ifelse(sum(c(0:(ifelse(j%%ncol(Y)!=0,j%%ncol(Y),ncol(Y))-sum((segment_eachrow[[j]])[s])-1)))==0,list(c((ifelse(j%%ncol(Y)!=0,j%%ncol(Y),ncol(Y))-sum((segment_eachrow[[j]])[s])):ncol(item_new))),list(-c(0:(ifelse(j%%ncol(Y)!=0,j%%ncol(Y),ncol(Y))-sum((segment_eachrow[[j]])[s])-1)))))])
@@ -85,22 +85,18 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
     }
     
     Y=Y1<-as.matrix(Y)
-    Y<-scale(Y)
     if(is.null(X)){
-      X1=X2<-rep(0,lag*m)
+      X1<-rep(0,lag*m)
       for(j in 2:lag)
       {
         
-        X1<-rbind(X1,c(c(t(Y1[c((j-1):1),])),rep(0,lag*m-length(c(t(Y1[c((j-1):1),]))))) )
+        X1<-rbind(X1,c(c(t(Y[c((j-1):1),])),rep(0,lag*m-length(c(t(Y[c((j-1):1),]))))) )
       }
-      
-      X<-t(sapply((lag+1):nrow(Y),function(j)c(t(Y1[c((j-1):(j-lag)),]))))
-      
+      X<-t(sapply((lag+1):nrow(Y),function(j)c(t(Y[c((j-1):(j-lag)),]))))
       X<-rbind(X1,X)
       
     }
-    X=X2<-as.matrix(cbind(Y1,X))
-    X<-scale(X)
+    X<-as.matrix(cbind(Y1,X))
     
     if(missing(mu_initial)) {
       mu_initial <- matrix(0,ncol=m,nrow=p*m)
@@ -115,7 +111,7 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
       }
     }
     if(missing(alpha_initial)) {alpha_initial=c(0.5,0.5) }
-    if(missing(sigma_initial)){sigma_initial<-var(Y)}
+    if(missing(sigma_initial)){sigma_initial<-var(Y)/2}
     if(missing(sigma_beta_initial)) {sigma_beta_initial<-sigma_initial}
     if(missing(phi_initial)){phi_initial<-matrix(c(rep(1,p*(m^2))),ncol=m) }
     if(length(mu_initial)==1){mu_iitial<-rep(mu_initial,m^2*p)}
@@ -172,10 +168,7 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
         
       }
       
-      if(j>(p-1)*m && j<=p*m)
-      {
-        phi_coef[[2*j]] = (1-adj[ifelse(j%%m==0,m,j%%m),-ifelse(j%%m==0,m,j%%m)])*phi_coef[[2*j]] 
-      }
+      
       
     }
     phi_real<-matrix(unlist(sapply(1:(p*m),function(j){A<-cbind(phi_coef[[2*j-1]],matrix(rep(phi_coef[[2*j]],segment_eachrow[[j]]),nrow=1));ifelse(j%%ncol(Y)!=0,ifelse(j%%ncol(Y)==1,list(A),{A[,c(1:(j%%ncol(Y)))]<-c(A[,c(2:(j%%ncol(Y)))],A[,1]);list(A)}),{A[,c(1:(ncol(Y)))]<-c(A[,c(2:(ncol(Y)))],A[,1]);list(A)})})),ncol=ncol(Y),byrow=T)
@@ -207,8 +200,8 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
     for( itera in 2:maxit)
     {
       
-      #criteria<-(abs(ELBO[itera]-ELBO[itera-1])>tol) *( abs(test-mean((Y-X%*%beta_mean)^2))>tol)
-      criteria<-(abs(ELBO[itera]-ELBO[itera-1])>tol )
+      criteria<-(abs(ELBO[itera]-ELBO[itera-1])>tol) *( abs(test-mean((Y-X%*%beta_mean)^2))>tol)
+      #criteria<-(abs(ELBO[itera]-ELBO[itera-1])>tol )
       
       if(criteria){cat("Iteration:", itera-1,"th","\tELBO:",ELBO[itera],"\tELBO_diff:", abs(ELBO[itera] - ELBO[itera-1]),"\ttest:", test,"\n")}else{iteration<-itera;break}
       test<-mean((Y-X%*%beta_mean)^2)
@@ -252,10 +245,7 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
           beta_mean[j,ifelse(j%%ncol(Y)!=0,-(j%%ncol(Y)),-(ncol(Y)))]<- unlist(rep(unlist(phi_coef[[2*j]]),segment_eachrow[[j]]))*mu_element_segment[j,]
           
         }
-        if(j>(p-1)*m && j<=p*m)
-        {
-          phi_coef[[2*j]] = (1-adj[ifelse(j%%m==0,m,j%%m),-ifelse(j%%m==0,m,j%%m)])*phi_coef[[2*j]] 
-        }
+        
       }
       phi_real<-matrix(unlist(sapply(1:(p*m),function(j){A<-cbind(phi_coef[[2*j-1]],matrix(rep(phi_coef[[2*j]],segment_eachrow[[j]]),nrow=1));ifelse(j%%ncol(Y)!=0,ifelse(j%%ncol(Y)==1,list(A),{A[,c(1:(j%%ncol(Y)))]<-c(A[,c(2:(j%%ncol(Y)))],A[,1]);list(A)}),{A[,c(1:(ncol(Y)))]<-c(A[,c(2:(ncol(Y)))],A[,1]);list(A)})})),ncol=ncol(Y),byrow=T)
       mu_element<-cbind(mu_element_diag,mu_element_segment)
@@ -355,10 +345,7 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
             
           }
           
-          if(j>(p-1)*m && j<=p*m)
-          {
-            phi_coef[[2*j]] = (1-adj[ifelse(j%%m==0,m,j%%m),-ifelse(j%%m==0,m,j%%m)])*phi_coef[[2*j]] 
-          }
+          
         }
         phi_real<-matrix(unlist(sapply(1:(p*m),function(j){A<-cbind(phi_coef[[2*j-1]],matrix(rep(phi_coef[[2*j]],segment_eachrow[[j]]),nrow=1));ifelse(j%%ncol(Y)!=0,ifelse(j%%ncol(Y)==1,list(A),{A[,c(1:(j%%ncol(Y)))]<-c(A[,c(2:(j%%ncol(Y)))],A[,1]);list(A)}),{A[,c(1:(ncol(Y)))]<-c(A[,c(2:(ncol(Y)))],A[,1]);list(A)})})),ncol=ncol(Y),byrow=T)
         mu_element<-cbind(mu_element_diag,mu_element_segment)
@@ -386,15 +373,20 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
         
         
         ELBO[itera+1] <- ln_y + ln_r + ln_eta + ln_coef_segment + ln_coef_diag
-        #criteria<-((ELBO[itera+1]-ELBO[itera])>tol) *( abs(test-mean((Y-X%*%beta_mean)^2))>tol)
-        criteria<-((ELBO[itera+1]-ELBO[itera])>tol)
+        criteria<-((ELBO[itera+1]-ELBO[itera])>tol) *( abs(test-mean((Y-X%*%beta_mean)^2))>tol)
+        #criteria<-((ELBO[itera+1]-ELBO[itera])>tol)
         if(criteria){cat("Iteration:", itera-1,"th","\tELBO:",ELBO[itera],"\tELBO_diff:", abs(ELBO[itera] - ELBO[itera-1]),"\ttest:", test,"\n")}else{iteration<-itera;break}
         test<-mean((Y-X%*%beta_mean)^2) 
         phi_coef_pre<-phi_coef
       }
-      
-      
-      
+      for(j in 1:ncol(X))
+      {
+        if(j>(p-1)*m && j<=p*m)
+        {
+          phi_coef_pre[[2*j]] = (1-adj[ifelse(j%%m==0,m,j%%m),-ifelse(j%%m==0,m,j%%m)])*phi_coef_pre[[2*j]] 
+        }
+        
+      }
       phi1<-lapply(1:(length(group)-1),function(j){phi_coef_pre[[j]][which(phi_coef_pre[[j]]>=.5)]<-phi_coef_pre[[j]][which(phi_coef_pre[[j]]>=.5)];phi_coef_pre[[j]][which(phi_coef_pre[[j]]<.5)]<-0;phi_coef_pre[[j]]})
       phi<- unlist(phi1)
       phi_real<-matrix(unlist(sapply(1:(p*m),function(j){A<-cbind(phi1[[2*j-1]],matrix(rep(phi1[[2*j]],segment_eachrow[[j]]),nrow=1));ifelse(j%%ncol(Y)!=0,ifelse(j%%ncol(Y)==1,list(A),{A[,c(1:(j%%ncol(Y)))]<-c(A[,c(2:(j%%ncol(Y)))],A[,1]);list(A)}),{A[,c(1:(ncol(Y)))]<-c(A[,c(2:(ncol(Y)))],A[,1]);list(A)})})),ncol=ncol(Y),byrow=T)
@@ -437,26 +429,23 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
     }
     
     #================ Data setting =============================
-    Y=Y1<-as.matrix(Y)
-    Y<-scale(Y)
+    Y<-as.matrix(Y)
     if(is.null(X)){
-      X1=X2<-rep(0,lag*m)
-      for(j in 2:lag)
+      X1<-rep(0,p*m)
+      for(j in 2:p)
       {
         
-        X1<-rbind(X1,c(c(t(Y1[c((j-1):1),])),rep(0,lag*m-length(c(t(Y1[c((j-1):1),]))))) )
+        X1<-rbind(X1,c(c(t(Y[c((j-1):1),])),rep(0,p*m-length(c(t(Y[c((j-1):1),]))))) )
       }
-      
-      X<-t(sapply((lag+1):nrow(Y),function(j)c(t(Y1[c((j-1):(j-lag)),]))))
-      
+      X<-t(sapply((p+1):nrow(Y),function(j)c(t(Y[c((j-1):(j-p)),]))))
       X<-rbind(X1,X)
       
     }
-    X<-scale(as.matrix(X))
-    X2<-as.matrix(X)
+    X<-as.matrix(X)
+    
     if(missing(mu_initial)) {mu_initial<-ginv(crossprod(X, X))%*%crossprod(X,Y)}
     if(missing(alpha_initial)) {alpha_initial=c(1,1) }
-    if(missing(sigma_initial)){sigma_initial<-var(Y)}
+    if(missing(sigma_initial)){sigma_initial<-var(Y)/2}
     if(missing(sigma_beta_initial)) {sigma_beta_initial<-sigma_initial}
     if(missing(phi_initial)){phi_initial<-matrix(c(rep(1,p*(m^2))),ncol=m) }
     if(length(mu_initial)==1){mu_iitial<-rep(mu_initial,m^2*p)}
@@ -521,8 +510,8 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
     for( itera in 2:maxit)
     {
       
-      #criteria<-(abs(ELBO[itera]-ELBO[itera-1])>tol) *( abs(test-mean((Y-X%*%beta_mean)^2))>tol)
-      criteria<-(abs(ELBO[itera]-ELBO[itera-1])>tol )
+      criteria<-(abs(ELBO[itera]-ELBO[itera-1])>tol) *( abs(test-mean((Y-X%*%beta_mean)^2))>tol)
+      #criteria<-(abs(ELBO[itera]-ELBO[itera-1])>tol )
       
       if(criteria){cat("Iteration:", itera-1,"th","\tELBO:",ELBO[itera],"\tELBO_diff:", abs(ELBO[itera] - ELBO[itera-1]),"\ttest:", test,"\n")}else{iteration<-itera;break}
       test<-mean((Y-X%*%beta_mean)^2)
@@ -655,8 +644,8 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
         
         
         ELBO[itera+1] <- ln_y + ln_r + ln_eta + ln_coef_segment + ln_coef_diag
-        #criteria<-((ELBO[itera+1]-ELBO[itera])>tol) *( abs(test-mean((Y-X%*%beta_mean)^2))>tol)
-        criteria<-((ELBO[itera+1]-ELBO[itera])>tol)
+        criteria<-((ELBO[itera+1]-ELBO[itera])>tol) *( abs(test-mean((Y-X%*%beta_mean)^2))>tol)
+        #criteria<-((ELBO[itera+1]-ELBO[itera])>tol)
         if(criteria){cat("Iteration:", itera-1,"th","\tELBO:",ELBO[itera],"\tELBO_diff:", abs(ELBO[itera] - ELBO[itera-1]),"\ttest:", test,"\n")}else{iteration<-itera;break}
         test<-mean((Y-X%*%beta_mean)^2) 
         phi_coef_pre<-phi_coef
@@ -689,8 +678,8 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
   
   fit<-list()
   fit$Lag<-lag
-  fit$Y<-Y1
-  fit$X<-X2
+  fit$Y<-Y
+  fit$X<-X
   fit$gamma_pos<-sapply(1:(length(phi1)/2),function(j)phi1[[2*(j-1)+1]])
   fit$eta_pos<-c(sapply(1:(length(phi1)/2),function(j)phi1[[2*j]]))
   fit$segment<-segment_eachrow
@@ -704,122 +693,82 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
 
 #============= Predict y_hat given X and object model====================
 predict.VB_NAR<-function(object,Y,X=NULL, step_ahead=1,current=F,rolling=F,rolling_num=N){
-  p<-object$Lag
+ p<-object$Lag
   if(current==T)
   {
-    bbhat<-matrix(0,nrow=nrow(Y)-1,ncol=ncol(Y)*ncol(Y)*(p+1))
+    bbhat<-matrix(0,nrow=nrow(Y)-1,ncol=m*m*(p+1))
   }else{
-    bbhat<-matrix(0,nrow=nrow(Y)-1,ncol=ncol(Y)*ncol(Y)*(p))
+    bbhat<-matrix(0,nrow=nrow(Y)-1,ncol=m*m*(p))
     
   }
-  
-  m<-ncol(Y)
   Y1<-as.matrix(Y)
+  m<-ncol(Y)
   if(current==T)
   {
-    
+    if(is.null(X))
+    {
+      Y<-rbind(as.matrix(object$Y),Y1)
+      Y<-Y[c((nrow(Y)-nrow(Y1)-p+1):nrow(Y)),]
+      X1<-t(sapply((p+1):nrow(Y),function(j)c(t(Y[c((j-1):(j-p)),]))))
+      X <- cbind(Y1,X1)
+    }
+    X<-rbind(object$X,X)
     if(step_ahead==1)
     {
-      if(is.null(X))
-      {
-        Y1<-as.matrix(object$Y)
-        X1<-c(t(Y1[c((nrow(Y1)-1):(nrow(Y1)-p)),]))
-        X <- cbind(Y1,X1)
-      }
-      
-      y_hat<- ((X-apply(object$X,2,mean))/apply(object$X,2,sd))%*%matrix(object$coef_beta,ncol=m)
-      y_hat<-y_hat*apply(object$Y,2,sd)+apply(object$Y,2,mean)
+      y_hat<- X[nrow(X),]%*%matrix(object$coef_beta,ncol=m)
     }else{
-      if(is.null(X))
-      {
-        Y<-rbind(as.matrix(object$Y),Y1)
-        Y<-Y[c((nrow(Y)-nrow(Y1)-p+1):nrow(Y)),]
-        X1<-t(sapply((p+1):nrow(Y),function(j)c(t(Y[c((j-1):(j-p)),]))))
-        X <- cbind(Y1,X1)
-      }else{
-        Y<-rbind(object$Y,Y)
-      }
-      X<-rbind(object$X,X)
-      y_hat<- (((X[(nrow(X)-step_ahead+1),]-apply(object$X,2,mean))/apply(object$X,2,sd)))%*%matrix(object$coef_beta,ncol=m)
-      y_hat<-y_hat*apply(object$Y,2,sd)+apply(object$Y,2,mean)
+      y_hat<- X[(nrow(X)-step_ahead+1),]%*%matrix(object$coef_beta,ncol=m)
       for(i in 2:step_ahead){
-        
         bb<-matrix(0,nrow=m*(p+1),ncol=m)
         phi_idx<-object$phi
-        
         for(j in 1:m)
         {
           if(length(which(phi_idx[,j]>0))>0)
           {
-            
             if(rolling==T)
             {
-              X_predict<-X[c((nrow(object$X)+i-rolling_num):(nrow(object$X)+i-1)),]
-              Y_predict<-rbind(object$Y,Y1[c(1:(i-1)),])[c((nrow(object$X)+i-rolling_num):(nrow(object$X)+i-1)),]
+              bb[c(which(phi_idx[,j]>0)),j]<-ginv(crossprod(X[c((nrow(object$X)+i-rolling_num):(nrow(object$X)+i-1)),c(which(phi_idx[,j]>0))],X[c((nrow(object$X)+i-rolling_num):(nrow(object$X)+i-1)),c(which(phi_idx[,j]>0))]))%*%crossprod(X[c((nrow(object$X)+i-rolling_num):(nrow(object$X)+i-1)),c(which(phi_idx[,j]>0))],rbind(matrix(object$Y[,j],ncol=1),matrix(Y1[c(1:(i-1)),j],ncol=1))[c((nrow(object$X)+i-rolling_num):(nrow(object$X)+i-1)),])
             }else{
+              bb[c(which(phi_idx[,j]>0)),j]<-solve(crossprod(X[c(1:(nrow(object$X)+i-1)),c(which(phi_idx[,j]>0))],X[c(1:(nrow(object$X)+i-1)),c(which(phi_idx[,j]>0))]))%*%crossprod(X[c(1:(nrow(object$X)+i-1)),c(which(phi_idx[,j]>0))],rbind(matrix(object$Y[,j],ncol=1),matrix(Y1[c(1:(i-1)),j],ncol=1)))
               
-              X_predict<-X[c(1:(nrow(object$X)+i-1)),]
-              Y_predict<-rbind(object$Y,Y1[c(1:(i-1)),])
             }
-            bb[c(which(phi_idx[,j]>0)),j]<-ginv(crossprod(scale(X_predict[,c(which(phi_idx[,j]>0))]),scale(X_predict[,c(which(phi_idx[,j]>0))])))%*%crossprod(scale(X_predict[,c(which(phi_idx[,j]>0))]),scale(Y_predict[,j]))
-            
           }
         }
         bbhat[i-1,]<-bb
-        y_hat<-rbind(y_hat,( ((X[(nrow(object$X)+i),]-apply(X_predict,2,mean))/apply(X_predict,2,sd))%*%bb)*apply(Y_predict,2,sd)+apply(Y_predict,2,mean))
-        
+        y_hat<-rbind(y_hat, X[(nrow(object$X)+i),]%*%bb)
       }
     }
   }else{
-    
+    if(is.null(X))
+    {
+      Y<-rbind(as.matrix(object$Y),Y1)
+      Y<-Y[c((nrow(Y)-nrow(Y1)-p+1):nrow(Y)),]
+      X<-t(sapply((p+1):nrow(Y),function(j)c(t(Y[c((j-1):(j-p)),]))))
+    }
+    X<-rbind(object$X,X)
     if(step_ahead==1)
     {
-      if(is.null(X))
-      {
-        Y<-rbind(as.matrix(object$Y),Y1)
-        Y<-Y[c((nrow(Y)-nrow(Y1)-p+1):nrow(Y)),]
-        X<-t(sapply((p+1):nrow(Y),function(j)c(t(Y[c((j-1):(j-p)),]))))
-      }
-      X<-rbind(object$X,X)
-      y_hat<- ((X-apply(object$X,2,mean))/apply(object$X,2,sd))%*%matrix(object$coef_beta,ncol=m)
-      y_hat<-y_hat*apply(object$Y,2,sd)+apply(object$Y,2,mean)
+      y_hat<- X[nrow(X),]%*%matrix(object$coef_beta,ncol=m)
     }else{
-      if(is.null(X))
-      {
-        Y<-rbind(as.matrix(object$Y),Y1)
-        Y<-Y[c((nrow(Y)-nrow(Y1)-p+1):nrow(Y)),]
-        X<-t(sapply((p+1):nrow(Y),function(j)c(t(Y[c((j-1):(j-p)),]))))
-      }else{
-        Y<-rbind(object$Y,Y)
-      }
-      X<-rbind(object$X,X)
-      y_hat<- ((X[(nrow(X)-step_ahead+1),]-apply(object$X,2,mean))/apply(object$X,2,sd))%*%matrix(object$coef_beta,ncol=m)
-      y_hat<-y_hat*apply(object$Y,2,sd)+apply(object$Y,2,mean)
+      y_hat<- X[(nrow(X)-step_ahead+1),]%*%matrix(object$coef_beta,ncol=m)
       for(i in 2:step_ahead){
-        
-        bb<-matrix(0,nrow=m*(p),ncol=m)
+        bb<-matrix(0,nrow=m*p,ncol=m)
         phi_idx<-object$phi
         for(j in 1:m)
         {
           if(length(which(phi_idx[,j]>0))>0)
           {
-            
             if(rolling==T)
             {
-              X_predict<-X[c((nrow(object$X)+i-rolling_num):(nrow(object$X)+i-1)),]
-              Y_predict<-rbind(object$Y,Y1[c(1:(i-1)),])[c((nrow(object$X)+i-rolling_num):(nrow(object$X)+i-1)),]
+              bb[c(which(phi_idx[,j]>0)),j]<-ginv(crossprod(X[c((nrow(object$X)+i-rolling_num):(nrow(object$X)+i-1)),c(which(phi_idx[,j]>0))],X[c((nrow(object$X)+i-rolling_num):(nrow(object$X)+i-1)),c(which(phi_idx[,j]>0))]))%*%crossprod(X[c((nrow(object$X)+i-rolling_num):(nrow(object$X)+i-1)),c(which(phi_idx[,j]>0))],rbind(matrix(object$Y[,j],ncol=1),matrix(Y1[c(1:(i-1)),j],ncol=1))[c((nrow(object$X)+i-rolling_num):(nrow(object$X)+i-1)),])
             }else{
+              bb[c(which(phi_idx[,j]>0)),j]<-solve(crossprod(X[c(1:(nrow(object$X)+i-1)),c(which(phi_idx[,j]>0))],X[c(1:(nrow(object$X)+i-1)),c(which(phi_idx[,j]>0))]))%*%crossprod(X[c(1:(nrow(object$X)+i-1)),c(which(phi_idx[,j]>0))],rbind(matrix(object$Y[,j],ncol=1),matrix(Y1[c(1:(i-1)),j],ncol=1)))
               
-              X_predict<-X[c(1:(nrow(object$X)+i-1)),]
-              Y_predict<-rbind(object$Y,Y1[c(1:(i-1)),])
             }
-            bb[c(which(phi_idx[,j]>0)),j]<-ginv(crossprod(scale(X_predict[,c(which(phi_idx[,j]>0))]),scale(X_predict[,c(which(phi_idx[,j]>0))])))%*%crossprod(scale(X_predict[,c(which(phi_idx[,j]>0))]),scale(Y_predict[,j]))
-            
           }
         }
-        bbhat[i-1,]<-bb
-        y_hat<-rbind(y_hat,( ((X[(nrow(object$X)+i),]-apply(X_predict,2,mean))/apply(X_predict,2,sd))%*%bb)*apply(Y_predict,2,sd)+apply(Y_predict,2,mean))
-        
+        bbhat<-rbind(bbhat,c(bb))
+        y_hat<-rbind(y_hat, X[(nrow(object$X)+i),]%*%bb)
       }
     }
     
@@ -833,17 +782,17 @@ predict.VB_NAR<-function(object,Y,X=NULL, step_ahead=1,current=F,rolling=F,rolli
   return(fit)
   
   
+  
 }
 
 
 
-#============= TPR_FPR_CTR ==================================================
 
 
 #============= TPR_FPR_CTR ==================================================
 TPR_FPR_TCR<-function(fit,coef_beta,p,beta,Iteration,current=F, adjmatrix = F)
 {
-  m<-ncol(beta)
+   m<-ncol(beta)
   Y<-fit$Y
   if(current==T)
   {
