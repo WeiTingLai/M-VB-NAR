@@ -43,11 +43,11 @@ for(k in 1:replication)
   #fit<-VB_NAR(Y_train,segment=segment,lag=p,maxit=10000,tol=1e-8,current=F)
 
   coef_beta[k,]<-fit$coef_beta
-  Y_hat[[k]] <-  predict.VB_NAR(fit,Y_test,step_ahead = nrow(Data)-N,current=T)$y_hat
+  Y_hat[[k]] <-  predict.VB_NAR(fit,Y_test,rolling_num  = nrow(Data)-N,current=T)$y_hat
 
   mspe<-rbind(mspe,(Y_test-Y_hat[[k]])^2)
 
-  betahat<-predict.VB_NAR(fit,Y_test,step_ahead =nrow(Data)-N,current=T)$bb
+  betahat<-predict.VB_NAR(fit,Y_test,rolling_num  = nrow(Data)-N,current=T)$bb
 
   mu_initalhat<-fit$mu_initial
 
