@@ -80,10 +80,6 @@ for(k in 100:100)
   betahat<-predict.VB_NAR(fit,Y_test,step_ahead = nrow(Data)-N,current=T)$bb
 
   mspe_all[[k]]<-mspe
-  
-}
-
-end.time<-proc.time()-start.time
 
 ## M-VAR-deGARCH
 ACC<-TPR_FPR_TCR(fit,coef_beta,p=5,Beta1,100,current=T)
@@ -97,6 +93,11 @@ ACC1<-TPR_FPR_TCR(fit,coef_beta[,-number],p=5,Beta1[-c(1:m),],100,current=F)
 
 ## VAR-deGARCH
 #ACC<-TPR_FPR_TCR(fit,coef_beta,p=5,Beta1[-c(1:m),],100,current=F)
+
+}
+
+end.time<-proc.time()-start.time
+
 
 
 ## Average time
