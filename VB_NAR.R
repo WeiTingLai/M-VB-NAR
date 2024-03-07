@@ -98,7 +98,7 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
     ## Mu initial setting: If we have an indicator matrix to identify the potential active variable, we establish the mu location value based on this structure. If not, set the upper triangle elements here as potential active variables.
     if(missing(mu_initial)) {
       mu_initial <- matrix(0,ncol=m,nrow=p*m)
-      if(!missing(adj))
+      if(missing(adj))
       {
         adj<-matrix(0,m,m)
         adj[upper.tri(adj,diag=F)]<-1
