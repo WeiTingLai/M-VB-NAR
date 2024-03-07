@@ -775,9 +775,9 @@ predict.VB_NAR<-function(object,Y,X=NULL, step_ahead=1,current=F,rolling=F,rolli
 
 
 #============= TPR_FPR_CTR ==================================================
-TPR_FPR_TCR<-function(fit,coef_beta,p,beta,Iteration,current=F, adjmatrix = F)
+TPR_FPR_TCR<-function(fit,coef_beta,p,beta,Iteration,current=F)
 {
-   m<-ncol(beta)
+  m<-ncol(beta)
   Y<-fit$Y
   if(current==T)
   {
@@ -788,28 +788,14 @@ TPR_FPR_TCR<-function(fit,coef_beta,p,beta,Iteration,current=F, adjmatrix = F)
       beta =beta[-c(1:m),]
     }
   }
-  if( adjmatrix == T)
-  {
-    p<-p-1
-    beta =beta[-c(1:m),]
-    beta<-as.matrix(beta)
-    coef_beta1<-t(sapply(1:Iteration,function(j) c(matrix(coef_beta[j,],ncol=m)[-c(1:m),]) ))
-    
-    phi_true<-unlist(sapply(1:(2*p*m),function(j)ifelse(j%%2!=0,ifelse(beta[j%/%2+1,ifelse((j%/%2+1)%%ncol(Y)==0,ncol(Y),(j%/%2+1)%%ncol(Y))]==0,0,1),list(sapply(1:length(fit$segment[[j%/%2]]),function(s)ifelse(sum(abs(beta[j%/%2,ifelse(j%/%2%%ncol(Y)==0,-ncol(Y),-(j%/%2%%ncol(Y)))][c((sum(fit$segment[[j%/%2]][c(1:s)])-fit$segment[[j%/%2]][[s]]+1):sum(fit$segment[[j%/%2]][c(1:s)]))]))==0,0,1)))) ))
-    TP<-sapply(1:Iteration,function(j)sum(ifelse(abs(coef_beta1[j,which(c(abs(beta[c(1:(m*p)),]))>0)])>0,1,0)))
-    FN<-sapply(1:Iteration,function(j)length(which(c(abs(beta[c(1:(m*p)),]))>0))-sum(ifelse(abs(coef_beta1[j,which(c(abs(beta[c(1:(m*p)),]))>0)])>0,1,0)))
-    FP<-sapply(1:Iteration,function(j)sum(ifelse(abs(coef_beta1[j,which(c(abs(beta[c(1:(m*p)),]))==0)])>0,1,0)))
-    TN<-sapply(1:Iteration,function(j)length(which(c(abs(beta[c(1:(m*p)),]))==0))-sum(ifelse(abs(coef_beta1[j,which(c(abs(beta[c(1:(m*p)),]))==0)])>0,1,0)))
-    
-  }else{
+
     beta<-as.matrix(beta)
     phi_true<-unlist(sapply(1:(2*p*m),function(j)ifelse(j%%2!=0,ifelse(beta[j%/%2+1,ifelse((j%/%2+1)%%ncol(Y)==0,ncol(Y),(j%/%2+1)%%ncol(Y))]==0,0,1),list(sapply(1:length(fit$segment[[j%/%2]]),function(s)ifelse(sum(abs(beta[j%/%2,ifelse(j%/%2%%ncol(Y)==0,-ncol(Y),-(j%/%2%%ncol(Y)))][c((sum(fit$segment[[j%/%2]][c(1:s)])-fit$segment[[j%/%2]][[s]]+1):sum(fit$segment[[j%/%2]][c(1:s)]))]))==0,0,1)))) ))
     TP<-sapply(1:Iteration,function(j)sum(ifelse(abs(coef_beta[j,which(c(abs(beta[c(1:(m*p)),]))>0)])>0,1,0)))
     FN<-sapply(1:Iteration,function(j)length(which(c(abs(beta[c(1:(m*p)),]))>0))-sum(ifelse(abs(coef_beta[j,which(c(abs(beta[c(1:(m*p)),]))>0)])>0,1,0)))
     FP<-sapply(1:Iteration,function(j)sum(ifelse(abs(coef_beta[j,which(c(abs(beta[c(1:(m*p)),]))==0)])>0,1,0)))
     TN<-sapply(1:Iteration,function(j)length(which(c(abs(beta[c(1:(m*p)),]))==0))-sum(ifelse(abs(coef_beta[j,which(c(abs(beta[c(1:(m*p)),]))==0)])>0,1,0)))
-    
-  }
+
   
   TPRFPRTCR<-list()
   
@@ -820,12 +806,8 @@ TPR_FPR_TCR<-function(fit,coef_beta,p,beta,Iteration,current=F, adjmatrix = F)
   
   TPRFPRTCR$indicaor_ture<-sum(phi_true)
   TPRFPRTCR$coef_true<-length(which(abs(beta)>0))
-  if(adjmatrix == T)
-  {
-    TPRFPRTCR$coef_est<-mean(sapply(1:Iteration,function(j)(length(which(abs(coef_beta1[j,])>0)))))
-    
-  }else{
-    TPRFPRTCR$coef_est<-mean(sapply(1:Iteration,function(j)(length(which(abs(coef_beta[j,])>0)))))
+
+  TPRFPRTCR$coef_est<-mean(sapply(1:Iteration,function(j)(length(which(abs(coef_beta[j,])>0)))))
     
   }
   
