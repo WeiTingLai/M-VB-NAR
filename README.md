@@ -3,15 +3,42 @@ This code is the function of the Variational Bayesian Inference for the Modified
 
 All the simulation results can be reproduced by using this code.
 
+# Data Generation
+```
+## The true coefficient matrix data is saved in BetaCoef_m20.csv
+Beta<-as.matrix(read.table("D:/BetaCoef_m20.csv",sep=",",head=F))
+m<-ncol(Beta)  ## number of time series
+p<-5  ## number of lag
+N<-600 ## size of data set
+replication<-100
+Data<-NULL
+for(i in 1:replication)
+{
+Y<-rmvnorm(5,rep(0,m),diag(1,m))
+
+for(k in 1:N){
+  Y<-rbind(Y,rmvnorm(1,c(t(Y[nrow(Y):(nrow(Y)-(p-1)),]))%*%Beta1[-c(1:m),],diag(1,m)))
+  Y[nrow(Y),]<-Y[nrow(Y),]%*%solve(diag(1,m)-Beta1[c(1:m),])
+}
+Data<-cbind(Data,Y[-c(1:p),])
+
+}
+
+
+```
 # Simulation:
 ```
 ## Read Data
+## The true coefficient matrix data is saved in BetaCoef_m20.csv
+Beta<-as.matrix(read.table("D:/BetaCoef_m20.csv",sep=",",head=F))
 
->Beta<-as.matrix(read.table("D:/BetaCoef_m20.csv",sep=",",head=F))
->Data<-as.matrix(read.table("D:/Datam20_rep100.csv",sep=",",head=F))
+## All independently 100 replications data are saved in Datam20_rep100.csv
+Data<-as.matrix(read.table("D:/Datam20_rep100.csv",sep=",",head=F))
 
 ## Set all the parameters:
-p=5;m=ncol(Beta);N=300
+p=5  ## number of lag
+m=ncol(Beta) ## number of time series
+N=300 ## size of training set
 replication=100
 
 ## No group structure
@@ -28,8 +55,11 @@ mspe_all <-as.list(NULL)
 sigma_hat<-matrix(0,nrow=replication,ncol=m*m)
 
 mspe=Y_hat<-NULL
+
+## Here, we can conduct 100 replications and display the average results. If we want to show average results, the code replaces "for(k in 1:replication)"
+## In the next example, we only display the 100th result.
 start.time<-proc.time()
-for(k in 1:replication)
+for(k in 100:100)
 {
   
   Y_test<-as.matrix(Data[c((N+1):nrow(Data)),c(((k-1)*m+1):(k*m))])
@@ -48,8 +78,6 @@ for(k in 1:replication)
   mspe<-rbind(mspe,(Y_test-Y_hat[[k]])^2)
 
   betahat<-predict.VB_NAR(fit,Y_test,step_ahead = nrow(Data)-N,current=T)$bb
-
-  mu_initalhat<-fit$mu_initial
 
   mspe_all[[k]]<-mspe
   
