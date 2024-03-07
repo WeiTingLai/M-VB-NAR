@@ -102,10 +102,8 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
       {
         adj<-matrix(0,m,m)
         adj[upper.tri(adj,diag=F)]<-1
-        indicator_matrix<-rbind(adj,matrix(rep(1,(p-1)*m*m),ncol=m))
-      }else{
-        indicator_matrix<-rbind(adj,matrix(rep(1,(p-1)*m*m),ncol=m))
       }
+        indicator_matrix<-rbind(adj,matrix(rep(1,(p-1)*m*m),ncol=m))
       for(j in 1:m){
         mu_initial[which( indicator_matrix[,j]>0),j] <- ginv(crossprod(X[,which( indicator_matrix[,j]>0)]))%*%crossprod(X[,which( indicator_matrix[,j]>0)],Y[,j])
       }
@@ -136,7 +134,7 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
     
     for(j in 1:ncol(X))
     { 
-      if(j<=m)
+      if(j<=m) ## According to I(A_0) 
       {
         
         mu_element_diag[j] <-0
@@ -146,6 +144,7 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
         mu_element_segment[j,]<-adj[j,-j]*mu_element_segment[j,]
         phi_coef[2*j]<-list(inv.logit(sapply(1:length(segment_eachrow[[j]]),function(s)ifelse(j%%ncol(Y)!=0,log(alpha_initial[2]/(1-alpha_initial[2]+1e-15))-(1/2)*log(det(matrix(sigma_beta_initial[-(j%%ncol(Y)),][,-(j%%ncol(Y))][c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)])),c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))],ncol=segment_eachrow[[j]][[s]])))+(1/2)*log(det(sigma_beta_element_segment[[j]][[s]])+1e-300)+(mu_element_segment[j,c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))]%*%chol2inv(chol(sigma_beta_element_segment[[(j)]][[s]]))%*%matrix(mu_element_segment[j,c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))],ncol=1)/2),log(alpha_initial[2]/(1-alpha_initial[2]))-(1/2)*log(det(matrix(sigma_beta_initial[-(ncol(Y)),][,-(ncol(Y))][c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)])),c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))],ncol=segment_eachrow[[j]][[s]])))+(1/2)*log(det(sigma_beta_element_segment[[j]][[s]])+1e-300)+(mu_element_segment[j,c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))]%*%chol2inv(chol(sigma_beta_element_segment[[(j)]][[s]]))%*%matrix(mu_element_segment[j,c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))],ncol=1)/2) ))))
         phi_coef[[2*j]]<-adj[j,-j]* phi_coef[[2*j]]
+
         beta_mean[j,ifelse(j%%ncol(Y)!=0,-(j%%ncol(Y)),-(ncol(Y)))]<- unlist(rep(unlist(phi_coef[[2*j]]),segment_eachrow[[j]]))*mu_element_segment[j,]
         
       }else{
@@ -192,8 +191,8 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
     for( itera in 2:maxit)
     {
       
-      criteria<-(abs(ELBO[itera]-ELBO[itera-1])>tol) *( abs(test-mean((Y-X%*%beta_mean)^2))>tol)
-      #criteria<-(abs(ELBO[itera]-ELBO[itera-1])>tol )
+      #criteria<-(abs(ELBO[itera]-ELBO[itera-1])>tol) *( abs(test-mean((Y-X%*%beta_mean)^2))>tol)
+      criteria<-(abs(ELBO[itera]-ELBO[itera-1])>tol )
       
       if(criteria){cat("Iteration:", itera-1,"th","\tELBO:",ELBO[itera],"\tELBO_diff:", abs(ELBO[itera] - ELBO[itera-1]),"\ttest:", test,"\n")}else{iteration<-itera;break}
       test<-mean((Y-X%*%beta_mean)^2)
@@ -215,6 +214,7 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
           mu_element_segment[j,]<-adj[j,-j]*mu_element_segment[j,]
           phi_coef[2*j]<-list(inv.logit(sapply(1:length(segment_eachrow[[j]]),function(s)ifelse(j%%ncol(Y)!=0,log(alpha_initial[2]/(1-alpha_initial[2]+1e-15))-(1/2)*log(det(matrix(sigma_beta_initial[-(j%%ncol(Y)),][,-(j%%ncol(Y))][c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)])),c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))],ncol=segment_eachrow[[j]][[s]])))+(1/2)*log(det(sigma_beta_element_segment[[j]][[s]])+1e-300)+(mu_element_segment[j,c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))]%*%chol2inv(chol(sigma_beta_element_segment[[(j)]][[s]]))%*%matrix(mu_element_segment[j,c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))],ncol=1)/2),log(alpha_initial[2]/(1-alpha_initial[2]))-(1/2)*log(det(matrix(sigma_beta_initial[-(ncol(Y)),][,-(ncol(Y))][c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)])),c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))],ncol=segment_eachrow[[j]][[s]])))+(1/2)*log(det(sigma_beta_element_segment[[j]][[s]])+1e-300)+(mu_element_segment[j,c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))]%*%chol2inv(chol(sigma_beta_element_segment[[(j)]][[s]]))%*%matrix(mu_element_segment[j,c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))],ncol=1)/2) ))))
           phi_coef[[2*j]]<-adj[j,-j]* phi_coef[[2*j]]
+
           beta_mean[j,ifelse(j%%ncol(Y)!=0,-(j%%ncol(Y)),-(ncol(Y)))]<- unlist(rep(unlist(phi_coef[[2*j]]),segment_eachrow[[j]]))*mu_element_segment[j,]
           
         }else{
@@ -307,14 +307,7 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
             mu_element_segment[j,]<-adj[j,-j]*mu_element_segment[j,]
             phi_coef[2*j]<-list(inv.logit(sapply(1:length(segment_eachrow[[j]]),function(s)ifelse(j%%ncol(Y)!=0,log(alpha_pre[2]/(1-alpha_pre[2]+1e-15))-(1/2)*log(det(matrix(sigma_beta_segment[-(j%%ncol(Y)),][,-(j%%ncol(Y))][c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)])),c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))],ncol=segment_eachrow[[j]][[s]])))+(1/2)*log(det(sigma_beta_element_segment[[j]][[s]])+1e-300)+(mu_element_segment[j,c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))]%*%chol2inv(chol(sigma_beta_element_segment[[(j)]][[s]]))%*%matrix(mu_element_segment[j,c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))],ncol=1)/2),log(alpha_pre[2]/(1-alpha_pre[2]+1e-15))-(1/2)*log(det(matrix(sigma_beta_segment[-(ncol(Y)),][,-(ncol(Y))][c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)])),c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))],ncol=segment_eachrow[[j]][[s]])))+(1/2)*log(det(sigma_beta_element_segment[[j]][[s]])+1e-300)+(mu_element_segment[j,c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))]%*%chol2inv(chol(sigma_beta_element_segment[[(j)]][[s]]))%*%matrix(mu_element_segment[j,c((sum(segment_eachrow[[j]][c(1:s)])-segment_eachrow[[j]][[s]]+1):sum(segment_eachrow[[j]][c(1:s)]))],ncol=1)/2) ))))
             phi_coef[[2*j]]<-adj[j,-j]* phi_coef[[2*j]]
-            if(!missing(adjustmatrix))
-            {
-              if( j<=m)
-              {
-                
-                phi_coef[[2*j]]<-adjustmatrix[j,-j]
-              }
-            }
+
             beta_mean[j,ifelse(j%%ncol(Y)!=0,-(j%%ncol(Y)),-(ncol(Y)))]<- unlist(rep(unlist(phi_coef[[2*j]]),segment_eachrow[[j]]))*mu_element_segment[j,]
             
           }else{
@@ -354,7 +347,8 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
         
         ln_coef_diag<- sum(sapply(1:ncol(X),function(j) phi_coef[[2*j-1]]*((1/2)*log(sigma_beta_element_diag[[j]])+(1/2)*(sigma_beta_element_diag[[j]])/sigma_beta_element_diag[[j]]-(1/2)*log(sigma_beta)-(1/2)*(sigma_beta_element_diag[[j]]+mu_element_diag[j]^2)/sigma_beta)))
         
-               
+        
+        
         ELBO[itera+1] <- ln_y + ln_r + ln_eta + ln_coef_segment + ln_coef_diag
         criteria<-((ELBO[itera+1]-ELBO[itera])>tol) *( abs(test-mean((Y-X%*%beta_mean)^2))>tol)
         #criteria<-((ELBO[itera+1]-ELBO[itera])>tol)
@@ -370,7 +364,6 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
         }
         
       }
-      # Median Probability Theory
       phi1<-lapply(1:(length(group)-1),function(j){phi_coef_pre[[j]][which(phi_coef_pre[[j]]>=.5)]<-phi_coef_pre[[j]][which(phi_coef_pre[[j]]>=.5)];phi_coef_pre[[j]][which(phi_coef_pre[[j]]<.5)]<-0;phi_coef_pre[[j]]})
       phi<- unlist(phi1)
       phi_real<-matrix(unlist(sapply(1:(p*m),function(j){A<-cbind(phi1[[2*j-1]],matrix(rep(phi1[[2*j]],segment_eachrow[[j]]),nrow=1));ifelse(j%%ncol(Y)!=0,ifelse(j%%ncol(Y)==1,list(A),{A[,c(1:(j%%ncol(Y)))]<-c(A[,c(2:(j%%ncol(Y)))],A[,1]);list(A)}),{A[,c(1:(ncol(Y)))]<-c(A[,c(2:(ncol(Y)))],A[,1]);list(A)})})),ncol=ncol(Y),byrow=T)
@@ -400,12 +393,8 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
     n<-nrow(Y)
     criteria<-T
     group<-c(0,rep(c(1,(m-1)),p*m))
-    #coef_beta<-matrix(0,nrow=Iteration,ncol=((p*m)*m))
-    #sigma_beta=sigma_hat<-matrix(0,nrow=N,ncol=m^2)
-    #alpha<-matrix(0,nrow=Iteration,ncol=2)
-    #iteration<-rep(0,Iteration)
+
     segment_eachrow<-matrix(t(as.list(lapply(1:(p*m),function(j)table(rep(1:length(segment),c(segment))[ifelse(j%%m!=0,-(j%%m),-m)])))),ncol=1)
-    #phi<-matrix(0,nrow=Iteration,ncol=length(unlist(segment_eachrow))+p*m)
     if(verbose){
       message("Info: Segment :",length(segment))
       message("Info: Sample of size:",ifelse(is.null(X),n,n))
@@ -414,7 +403,6 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
     
     #================ Data setting =============================
     Y<-as.matrix(Y)
-    ## X=(Y_{t-1},...Y_{t-p}). If X is not given, X will be constructed automatically here.                                          
     if(is.null(X)){
       X1<-rep(0,p*m)
       for(j in 2:p)
@@ -427,9 +415,9 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
       
     }
     X<-as.matrix(X)
-    ## Mu initial setting: If we do not have a mu initial, we will use the LS method to set the mu initial.
+    
     if(missing(mu_initial)) {mu_initial<-ginv(crossprod(X, X))%*%crossprod(X,Y)}
-    if(missing(alpha_initial)) {alpha_initial=c(0.5,0.5) }
+    if(missing(alpha_initial)) {alpha_initial=c(1,1) }
     if(missing(sigma_initial)){sigma_initial<-var(Y)/2}
     if(missing(sigma_beta_initial)) {sigma_beta_initial<-sigma_initial}
     if(missing(phi_initial)){phi_initial<-matrix(c(rep(1,p*(m^2))),ncol=m) }
@@ -629,8 +617,8 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
         
         
         ELBO[itera+1] <- ln_y + ln_r + ln_eta + ln_coef_segment + ln_coef_diag
-        criteria<-((ELBO[itera+1]-ELBO[itera])>tol) *( abs(test-mean((Y-X%*%beta_mean)^2))>tol)
-        #criteria<-((ELBO[itera+1]-ELBO[itera])>tol)
+        #criteria<-((ELBO[itera+1]-ELBO[itera])>tol) *( abs(test-mean((Y-X%*%beta_mean)^2))>tol)
+        criteria<-((ELBO[itera+1]-ELBO[itera])>tol)
         if(criteria){cat("Iteration:", itera-1,"th","\tELBO:",ELBO[itera],"\tELBO_diff:", abs(ELBO[itera] - ELBO[itera-1]),"\ttest:", test,"\n")}else{iteration<-itera;break}
         test<-mean((Y-X%*%beta_mean)^2) 
         phi_coef_pre<-phi_coef
