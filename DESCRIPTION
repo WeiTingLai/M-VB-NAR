@@ -7,21 +7,33 @@ Maintainer: Wei-Ting Lai <kimki510343@gmail.com>
 Imports: ExPosition, alluvial
 Description: Tools for data analysis with modified VAR-deGARCH (M-VAR-deGARCH) models. Specifically, the function provides facilities for implementing general structural time series models, fitting them to multivariate time series data, and conducting feature selection on the regression component.
              VB-NAR: 
-                The input to the algorithm in VB-NAR
+                The input to the function VB-NAR
                   Y: Matrix-type of multivariate time series.
                   X: Matrix-type explanatory variables can be constructed as either (Y_{t}, Y_{t-1}, ..., Y_{t-p}) or (Y_{t-1}, Y_{t-2}, ..., Y_{t-p}). If X is not specified, it will be automatically generated based on the implied model.
                   segment: Group structure, where we consider no grouping structure and set it as c(1,1,...,1).
-                  adj: 
+                  adj: The indicator matrices, where the elements with 0 values represent the constraints that the associated coefficients in A_{0} and A_{p}, respectively, must be 0. In contrast, the elements with 1 denote potentially active variables in the associated coefficient matrices. This matrix is ​​restricted to an upper triangular matrix. If adj is not defined, the function is automatically set as an upper triangular matrix.
                   lag: Number of lags. 
-                  maxit:
-                  tol:
-                  phi_initial:
-                  alpha_initial:
-                  mu_initial:
-                  sigma_initial:
-                  sigma_beta_initial:
+                  maxit: Maximum iteration. The number of maximum iterations want to set. The default is 1e+5.
+                  tol: Stopping criterion, the stopping criterion is that the value difference of $L(q)$ in two consecutive iterations is less than a tol. The default is 1e-8. 
+                  phi_initial: Initial settings for activity variables. If phi_initial is not set, the function will set all elements to 1.
+                  alpha_initial: The initial setting of the prior parameters for the indicator variables Ber(\pi_1) and Ber(\pi_2). If alpha_initial is not set, the function will set c(0.5, 0.5).
+                  mu_initial: The initial setting of the coefficient matrix. If mu_initial is not set, the function will use the LSE method to estimate the coefficient matrix.
+                  sigma_initial: The initial setting of noise. If sigma_initial is not set, the function will use the variance of time series.
+                  sigma_beta_initial: The initial setting of the prior parameters for the variance about coefficient. If sigma_beta_initial is not set, the function will use the same value as sigma_initial.
                   verbose: When 'verbose' is set to T, the model will show the information about the segment, sample size, and number of lags.
                   current: The modifier 'current' denotes whether this model incorporates the most recent information. When 'current' is set to T, the model considers the latest data and employs the M-VAR-deGARCH model. Conversely, when 'current' is set to F, it employs the VAR-deGARCH model.
+                The output to the function VB-NAR
+                  Lag: Number of lags.
+                  Y: Matrix-type of multivariate time series.
+                  X: Matrix-type explanatory variables can be constructed as either (Y_{t}, Y_{t-1}, ..., Y_{t-p}) or (Y_{t-1}, Y_{t-2}, ..., Y_{t-p}). If X is not specified, it will be automatically generated based on the implied model.
+                  gamma_pos: The posterior probability of whether the off-diagonal coefficients are active variables.
+                  eta_pos: The posterior probability of whether the diagonal coefficients are active variables.
+                  segment: Group structure.
+                  phi: The posterior probability of whether the coefficients are active variables.
+                  coef_beta: Estimation of coefficients.
+                  iteration: The maximum iteration in the model fitted  
+                  sigma: Estimation of noise.  
+                  coef_variance: Estimation of the variance about coefficient.
 
                   The indicator variable current in  The output will be the coefficient matrix, the probability of active variable, and the estimate of variance and covariance matrix.
              
