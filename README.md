@@ -67,10 +67,13 @@ for(k in 100:100)
   
   message("Info: Replication:",k)
 
-  ## M-VAR-deGARCH 
+  ## When 'current' is set to T, the model considers the latest data and employs the M-VAR-deGARCH model. 
   fit<-VB_NAR(Y_train,segment=segment,lag=p,adj=adjma,maxit=10000,tol=1e-8,current=T)
-  ## VAR-deGARCH
-  #fit<-VB_NAR(Y_train,segment=segment,lag=p,maxit=10000,tol=1e-8,current=F)
+
+  ###################################################################################
+  ##      When 'current' is set to F, it employs the VAR-deGARCH model.             #
+  #  fit<-VB_NAR(Y_train,segment=segment,lag=p,maxit=10000,tol=1e-8,current=F)      #
+  ###################################################################################
 
   coef_beta[k,]<-fit$coef_beta
   Y_hat[[k]] <-  predict.VB_NAR(fit,Y_test,step_ahead = nrow(Data)-N,current=T)$y_hat
@@ -82,18 +85,22 @@ for(k in 100:100)
   mspe_all[[k]]<-mspe
 
 ## M-VAR-deGARCH
-ACC<-TPR_FPR_TCR(fit,coef_beta,p=5,Beta1,100,current=T)
-## M-VAR-deGARCH (excluding $A_0$)
-number<-c(1:m)
-for(i in 1:(m-1))
-{
-  number<-c(number,c(((i*(m*(p+1)))+1):((i*(m*(p+1)))+m)))
-}
-ACC1<-TPR_FPR_TCR(fit,coef_beta[,-number],p=5,Beta1[-c(1:m),],100,current=F)
+ACC<-TPR_FPR_TCR(fit,coef_beta,Beta1,100,current=T)
 
-## VAR-deGARCH
-#ACC<-TPR_FPR_TCR(fit,coef_beta,p=5,Beta1[-c(1:m),],100,current=F)
+###################################################################################
+##                  M-VAR-deGARCH (excluding $A_0$)                               #
+#  number<-c(1:m)                                                                 #
+#  for(i in 1:(m-1))                                                              #
+#  {                                                                              #    
+#    number<-c(number,c(((i*(m*(p+1)))+1):((i*(m*(p+1)))+m)))                     #
+#  }                                                                              #
+#  ACC1<-TPR_FPR_TCR(fit,coef_beta[,-number],Beta1[-c(1:m),],100,current=F)       #
+###################################################################################
 
+###################################################################################
+##                                 VAR-deGARCH                                    #
+#ACC<-TPR_FPR_TCR(fit,coef_beta,Beta1[-c(1:m),],100,current=F)                    #
+###################################################################################
 }
 
 end.time<-proc.time()-start.time
@@ -105,9 +112,11 @@ end.time/replication
 
 ## Show TPR, FPR
 ACC
-## M-VAR-deGARCH (excluding $A_0$)
-ACC1
 
+###################################################################################
+##                    M-VAR-deGARCH (excluding $A_0$)                             #
+#    ACC1                                                                         #
+###################################################################################
 ## Mean square prediction error
 mean(apply(sapply(1:100,function(k)apply(mspe_all[[k]],2,mean)),2,mean))
 
@@ -120,7 +129,7 @@ library("RColorBrewer")
 library("lattice")
 library("gridExtra")
 library("ggplot2")
-library(grid)
+library("grid")
 brks <- c( seq(-0.6,0.6, length.out = 22))
 rgb.palette <- colorRampPalette(c("red","white","blue"))
 
