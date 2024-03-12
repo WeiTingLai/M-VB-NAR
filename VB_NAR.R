@@ -7,7 +7,7 @@
 
 
 #============= VAR-Variatonal Bayesian function ============================
-VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_initial,mu_initial,sigma_initial, sigma_beta_initial,verbose=T,cv=F, current=F)
+VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_initial,mu_initial,sigma_initial, sigma_beta_initial,verbose=T, current=F)
 {
   #===========Use Package ==============
   if (!require("mvtnorm",character.only=TRUE)){
