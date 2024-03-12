@@ -763,10 +763,10 @@ predict.VB_NAR<-function(object,Y,X=NULL, step_ahead=1,current=F,rolling=T,rolli
 
 
 #============= TPR_FPR_CTR ==================================================
-TPR_FPR_TCR<-function(fit,coef_beta,p,beta,Iteration,current=F)
+TPR_FPR_TCR<-function(object,coef_beta,beta,Iteration,current=F)
 {
   m<-ncol(beta)
-  Y<-fit$Y
+  p<-object$Lag
   if(current==T)
   {
     p<-p+1
