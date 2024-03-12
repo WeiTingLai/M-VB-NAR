@@ -665,7 +665,7 @@ VB_NAR<-function(Y,X=NULL,segment,adj,lag,maxit=1e+5,tol=1e-8,phi_initial,alpha_
 }
 
 #============= Predict y_hat given X and object model====================
-predict.VB_NAR<-function(object,Y,X=NULL, step_ahead=1,current=F,rolling=F,rolling_num=N){
+predict.VB_NAR<-function(object,Y,X=NULL, step_ahead=1,current=F,rolling=T,rolling_num=N){
  p<-object$Lag
   if(current==T)
   {
