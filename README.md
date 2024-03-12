@@ -179,5 +179,3 @@ grid.arrange(plt[[1]],plt[[2]],plt[[4]],plt[[6]],ncol=2, top = textGrob("The est
 
 
 ```
-# References
-Lai, W.T., Chen, R.B., Chen, Y., Koch, T. (2022). Variational Bayesian inference for network autoregression models. Computational Statistics & Data Analysis 169, 107406.
