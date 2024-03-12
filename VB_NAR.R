@@ -793,7 +793,7 @@ TPR_FPR_TCR<-function(object,coef_beta,beta,Iteration,current=F)
   TPRFPRTCR$TNR<-mean(1-TPRFPRTCR$FPR)
   TPRFPRTCR$TCR<-mean((TP+TN)/length(c(beta[c(1:(m*p)),])))
   
-  TPRFPRTCR$indicaor_ture<-sum(phi_true)
+  TPRFPRTCR$indicator_true<-sum(phi_true)
   TPRFPRTCR$coef_true<-length(which(abs(beta)>0))
 
   TPRFPRTCR$coef_est<-mean(sapply(1:Iteration,function(j)(length(which(abs(coef_beta[j,])>0)))))
