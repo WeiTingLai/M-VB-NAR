@@ -6,6 +6,7 @@ Author: Wei-Ting Lai, Ray-Bing Chen, Shih-Feng Huang
 Maintainer: Wei-Ting Lai <kimki510343@gmail.com>
 Imports: ExPosition, alluvial
 Description: Tools for data analysis with modified VAR-deGARCH (M-VAR-deGARCH) models. Specifically, the function provides facilities for implementing general structural time series models, fitting them to multivariate time series data, and conducting feature selection on the regression component.
+
              VB-NAR: 
                 The input to the function VB-NAR
                   Y: Matrix-type of multivariate time series.
@@ -47,6 +48,7 @@ Description: Tools for data analysis with modified VAR-deGARCH (M-VAR-deGARCH) m
                 The output to the function predict.VB_NAR
                   y_hat: The forecast Y.
                   bb: Estimation of the coefficient matrix during forecasting.
+
              TPR_FPR_TCR: 
                 The input to the function TPR_FPR_TCR
                   object: the result in the function of VB_NAR
@@ -61,5 +63,5 @@ Description: Tools for data analysis with modified VAR-deGARCH (M-VAR-deGARCH) m
                   TCR: True classification rate  
                   indicator_true: The number of true active variables.
                   coef_est: Average model size. 
-the number of true active variables, and the mean estimate of active variables.
+
 
