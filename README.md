@@ -110,7 +110,7 @@ end.time<-proc.time()-start.time
 ## Average time
 end.time/replication
 
-## Show TPR, FPR
+## Show TPR, FPR, and average model size
 ACC
 
 ###################################################################################
