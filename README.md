@@ -48,8 +48,7 @@ coef_beta=phi <- matrix(0,nrow=replication,ncol=(((p+1)*m)*m))
 coef_variance <-list()
 
 ## Set initial indicator matrix
-adjma <- matrix(0,ncol=m,nrow=m)
-adjma[c(1:(m/2)),c((m/2+1):m)]<-1
+
 
 adjustmatrix <- matrix(0,ncol=m,nrow=m)
 adjustmatrix[2,] <- c(rep(0,13),1,rep(0,6))
@@ -80,7 +79,7 @@ for(k in 100:100)
   message("Info: Replication:",k)
 
   ## When 'current' is set to T, the model considers the latest data and employs the M-VAR-deGARCH model. 
-  fit<-VB_NAR(Y_train,segment=segment,lag=p,adj=adjma,adjustmatrix=adjustmatrix,maxit=10000,tol=1e-8,current=T)
+  fit<-VB_NAR(Y_train,segment=segment,lag=p,adj=adjma,maxit=10000,tol=1e-8,current=T)
 
   ###################################################################################
   ##      When 'current' is set to F, it employs the VAR-deGARCH model.             #
