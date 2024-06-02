@@ -31,6 +31,16 @@ Data<-cbind(Data,Y[-c(1:p),])
 ## Read Data
 ## The true coefficient matrix data is saved in BetaCoef_m20.csv
 Beta<-as.matrix(read.table("D:/BetaCoef_m20.csv",sep=",",head=F))
+adjustmatrix <- matrix(0,ncol=m,nrow=m)
+adjustmatrix[2,] <- c(rep(0,13),1,rep(0,6))
+adjustmatrix[3,] <-  c( rep(0,12), rep(1,4), rep(0,4))
+adjustmatrix[4,] <-  c( rep(0,12), rep(1,6), rep(0,2))
+adjustmatrix[5,] <-  c( rep(0,12), 1, rep(0,4),rep(1,3))
+adjustmatrix[6,] <-  c( rep(0,10), 1,0,0,1, rep(0,6))
+adjustmatrix[7,] <-  c( rep(0,10), 1, 0,1, 1, rep(0,2),1,rep(0,3))   
+adjustmatrix[8,] <-  c(rep(0,10), 1, 0, 1, rep(1,7))    
+adjustmatrix[9,] <-  c(rep(0,10), 1, 0, 0,1, rep(0,6))
+adjustmatrix[10,] <-  c(rep(0,10), 1, 0, 0,1, rep(0,6))
 
 ## All independently 100 replications data are saved in Datam20_rep100.csv
 Data<-as.matrix(read.table("D:/Datam20_rep100.csv",sep=",",head=F))
@@ -48,18 +58,10 @@ coef_beta=phi <- matrix(0,nrow=replication,ncol=(((p+1)*m)*m))
 coef_variance <-list()
 
 ## Set initial indicator matrix
+adjma<-matrix(0,nrow=m,ncol=m)
+adjma[c(1:(m/2)),c(((m/2+1):m))]<-1
 
 
-adjustmatrix <- matrix(0,ncol=m,nrow=m)
-adjustmatrix[2,] <- c(rep(0,13),1,rep(0,6))
-adjustmatrix[3,] <-  c( rep(0,12), rep(1,4), rep(0,4))
-adjustmatrix[4,] <-  c( rep(0,12), rep(1,6), rep(0,2))
-adjustmatrix[5,] <-  c( rep(0,12), 1, rep(0,4),rep(1,3))
-adjustmatrix[6,] <-  c( rep(0,10), 1,0,0,1, rep(0,6))
-adjustmatrix[7,] <-  c( rep(0,10), 1, 0,1, 1, rep(0,2),1,rep(0,3))   
-adjustmatrix[8,] <-  c(rep(0,10), 1, 0, 1, rep(1,7))    
-adjustmatrix[9,] <-  c(rep(0,10), 1, 0, 0,1, rep(0,6))
-adjustmatrix[10,] <-  c(rep(0,10), 1, 0, 0,1, rep(0,6))
 
 
 mspe_all <-as.list(NULL)
@@ -79,7 +81,7 @@ for(k in 100:100)
   message("Info: Replication:",k)
 
   ## When 'current' is set to T, the model considers the latest data and employs the M-VAR-deGARCH model. 
-  fit<-VB_NAR(Y_train,segment=segment,lag=p,adj=adjma,maxit=10000,tol=1e-8,current=T)
+  fit<-VB_NAR(Y_train,segment=segment,lag=p,adj=adjma, adjustmatrix=adjustmatrix,maxit=10000,tol=1e-8,current=T)
 
   ###################################################################################
   ##      When 'current' is set to F, it employs the VAR-deGARCH model.             #
