@@ -51,6 +51,18 @@ coef_variance <-list()
 adjma <- matrix(0,ncol=m,nrow=m)
 adjma[c(1:(m/2)),c((m/2+1):m)]<-1
 
+adjustmatrix <- matrix(0,ncol=m,nrow=m)
+adjustmatrix[2,] <- c(rep(0,13),1,rep(0,6))
+adjustmatrix[3,] <-  c( rep(0,12), rep(1,4), rep(0,4))
+adjustmatrix[4,] <-  c( rep(0,12), rep(1,6), rep(0,2))
+adjustmatrix[5,] <-  c( rep(0,12), 1, rep(0,4),rep(1,3))
+adjustmatrix[6,] <-  c( rep(0,10), 1,0,0,1, rep(0,6))
+adjustmatrix[7,] <-  c( rep(0,10), 1, 0,1, 1, rep(0,2),1,rep(0,3))   
+adjustmatrix[8,] <-  c(rep(0,10), 1, 0, 1, rep(1,7))    
+adjustmatrix[9,] <-  c(rep(0,10), 1, 0, 0,1, rep(0,6))
+adjustmatrix[10,] <-  c(rep(0,10), 1, 0, 0,1, rep(0,6))
+
+
 mspe_all <-as.list(NULL)
 sigma_hat<-matrix(0,nrow=replication,ncol=m*m)
 
