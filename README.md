@@ -68,7 +68,7 @@ for(k in 100:100)
   message("Info: Replication:",k)
 
   ## When 'current' is set to T, the model considers the latest data and employs the M-VAR-deGARCH model. 
-  fit<-VB_NAR(Y_train,segment=segment,lag=p,adj=adjma,maxit=10000,tol=1e-8,current=T)
+  fit<-VB_NAR(Y_train,segment=segment,lag=p,adj=adjma,adjustmatrix=adjustmatrix,maxit=10000,tol=1e-8,current=T)
 
   ###################################################################################
   ##      When 'current' is set to F, it employs the VAR-deGARCH model.             #
