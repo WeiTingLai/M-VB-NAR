@@ -77,12 +77,12 @@ ACC<-TPR_FPR_TCR(fit,coef_beta[k,],Beta1,1,current=T)
 #  {                                                                              #    
 #    number<-c(number,c(((i*(m*(p+1)))+1):((i*(m*(p+1)))+m)))                     #
 #  }                                                                              #
-#  ACC1<-TPR_FPR_TCR(fit,coef_beta[,-number],Beta1[-c(1:m),],100,current=F)       #
+#  ACC1<-TPR_FPR_TCR(fit,coef_beta[k,-number],Beta1[-c(1:m),],1,current=F)        #
 ###################################################################################
 
 ###################################################################################
 ##                                 VAR-deGARCH                                    #
-#ACC<-TPR_FPR_TCR(fit,coef_beta,Beta1[-c(1:m),],100,current=F)                    #
+#ACC<-TPR_FPR_TCR(fit,coef_beta[k,],Beta1[-c(1:m),],1,current=F)                  #
 ###################################################################################
 }
 
