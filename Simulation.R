@@ -114,8 +114,8 @@ mean(apply(sapply(1:100,function(k)apply(mspe_all[[k]],2,mean)),2,mean))
 
 ## Heatmap of coefficient matrix ($A_0$, $A_1$, $A_3$, and $A_5$)
 
-beta <-coef_beta[k,]     #100 replications apply(coef_beta,2,mean)
-beta<-matrix(beta,ncol=m)
+beta <-coef_beta[k,]     #100 replications: apply(coef_beta,2,mean)
+beta<-matrix(beta,ncol=m)  # True: beta<-Beta1
 
 library("RColorBrewer")
 library("lattice")
