@@ -1,6 +1,7 @@
 ## Read Data
 ## The true coefficient matrix data is saved in BetaCoef_m20.csv
-Beta<-as.matrix(read.table("D:/BetaCoef_m20.csv",sep=",",head=F))
+## The file location needs to be adjusted according to where you save it
+Beta<-as.matrix(read.table("D:/BetaCoef_m20.csv",sep=",",head=F)) 
 adjustmatrix <- matrix(0,ncol=m,nrow=m)
 adjustmatrix[2,] <- c(rep(0,13),1,rep(0,6))
 adjustmatrix[3,] <-  c( rep(0,12), rep(1,4), rep(0,4))
@@ -13,6 +14,7 @@ adjustmatrix[9,] <-  c(rep(0,10), 1, 0, 0,1, rep(0,6))
 adjustmatrix[10,] <-  c(rep(0,10), 1, 0, 0,1, rep(0,6))
 
 ## All independently 100 replications data are saved in Datam20_rep100.csv
+## The file location needs to be adjusted according to where you save it
 Data<-as.matrix(read.table("D:/Datam20_rep100.csv",sep=",",head=F))
 
 ## Set all the parameters:
