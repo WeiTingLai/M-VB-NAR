@@ -42,7 +42,7 @@ mspe=Y_hat<-NULL
 ## Here, we can conduct 100 replications and display the average results. If we want to show average results, the code replaces "for(k in 1:replication)"
 ## In the next example, we only display the 100th result.
 start.time<-proc.time()
-for(k in 100:100)
+for(k in 100:100)   ## if 100 replications  the code is  for(k in 1:100)
 {
   
   Y_test<-as.matrix(Data[c((N+1):nrow(Data)),c(((k-1)*m+1):(k*m))])
@@ -67,8 +67,11 @@ for(k in 100:100)
 
   mspe_all[[k]]<-mspe
 
-## M-VAR-deGARCH
+##                              M-VAR-deGARCH
+##                            The 100th replication
 ACC<-TPR_FPR_TCR(fit,coef_beta[k,],Beta1,1,current=T)
+##                            100 replications
+# ACC<-TPR_FPR_TCR(fit,coef_beta,Beta1,100,current=T)
 
 ###################################################################################
 ##                  M-VAR-deGARCH (excluding $A_0$)                               #
@@ -77,12 +80,18 @@ ACC<-TPR_FPR_TCR(fit,coef_beta[k,],Beta1,1,current=T)
 #  {                                                                              #    
 #    number<-c(number,c(((i*(m*(p+1)))+1):((i*(m*(p+1)))+m)))                     #
 #  }                                                                              #
+##                            The 100th replication                               #
 #  ACC1<-TPR_FPR_TCR(fit,coef_beta[k,-number],Beta1[-c(1:m),],1,current=F)        #
+##                               100 replications                                 #
+#ACC<-TPR_FPR_TCR(fit,coef_beta[,-number],Beta1[-c(1:m),],100,current=F)          #  
 ###################################################################################
 
 ###################################################################################
 ##                                 VAR-deGARCH                                    #
+##                            The 100th replication                               #
 #ACC<-TPR_FPR_TCR(fit,coef_beta[k,],Beta1[-c(1:m),],1,current=F)                  #
+##                               100 replications                                 #
+#ACC<-TPR_FPR_TCR(fit,coef_beta,Beta1[-c(1:m),],100,current=F)                    #
 ###################################################################################
 }
 
@@ -105,7 +114,7 @@ mean(apply(sapply(1:100,function(k)apply(mspe_all[[k]],2,mean)),2,mean))
 
 ## Heatmap of coefficient matrix ($A_0$, $A_1$, $A_3$, and $A_5$)
 
-beta <-apply(coef_beta,2,mean)
+beta <-coef_beta[k,]     #100 replications apply(coef_beta,2,mean)
 beta<-matrix(beta,ncol=m)
 
 library("RColorBrewer")
