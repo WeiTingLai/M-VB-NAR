@@ -41,10 +41,10 @@ sigma_hat<-matrix(0,nrow=replication,ncol=m*m)
 
 mspe=Y_hat<-NULL
 
-## Here, we can conduct 100 replications and display the average results. If we want to show average results, the code replaces "for(k in 1:replication)"
+## Here, we can conduct 100 replications and display the average results. If we want to show average results, the code replaces "for(k in 1:100)"
 ## In the next example, we only display the 100th result.
 start.time<-proc.time()
-for(k in 100:100)   ## if 100 replications  the code is  for(k in 1:100)
+for(k in 100:100)   
 {
   
   Y_test<-as.matrix(Data[c((N+1):nrow(Data)),c(((k-1)*m+1):(k*m))])
