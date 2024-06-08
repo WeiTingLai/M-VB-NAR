@@ -106,7 +106,7 @@ library("gridExtra")
 library("ggplot2")
 library(grid)
 
-brks        <- c( seq(-0.8,0.8, length.out = 22))
+brks        <- c( seq(-1,1, length.out = 22))
 rgb.palette <- colorRampPalette(c("red","white","blue"))
 
 beta        <- apply( betahat[c(1:256), ], 2 , mean )
