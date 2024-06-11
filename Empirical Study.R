@@ -1,6 +1,6 @@
 
-VARData  <- as.matrix( read.csv( "C:/Users/user/Downloads/Empirical.csv", head = F, row.names = 1 ) )
-adjma    <- as.matrix( read.csv( "C:/Users/user/Downloads/opentime.csv", head = T, row.names = 1 ) )
+VARData  <- as.matrix( read.csv( "D:/Empirical.csv", head = F, row.names = 1 ) )
+adjma    <- as.matrix( read.csv( "D:/opentime.csv", head = T, row.names = 1 ) )
 
 rownames(VARData)[1352]  #2015/04/01
 rownames(VARData)[1608]  #2016/03/31
@@ -155,4 +155,7 @@ plt[[1]] <- levelplot(t(beta), at = brks, col.regions = rgb.palette, colorkey = 
                         ,scales=list(draw=FALSE ) )
 plt[[1]]
 
-######################################################################################
+###########################  Figure 6  ##################################
+
+
+
