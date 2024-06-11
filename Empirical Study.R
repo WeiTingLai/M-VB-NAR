@@ -157,5 +157,91 @@ plt[[1]]
 
 ###########################  Figure 6  ##################################
 
+## Here, we adopt the 1% percentile of the in-sample returns as the threshold of the occurrence of high-risk events under the previous rolling window framework  
+
+high_risk1<-round(apply(Y_train[c(nrow(Y_train):(nrow(Y_train)-249)),],2,function(a)quantile(a,0.01)),2)
+for(i in 1:(nrow(Y_test)-1))
+{
+  Y_hirisk<-rbind(Y_train,Y_test[c(1:i),])
+  high_risk1<-rbind(high_risk1,
+                    round(apply(Y_hirisk[c(nrow(Y_hirisk):(nrow(Y_hirisk)-249)),],2,function(a)quantile(a,0.01)),2))
+}
 
 
+# Since each method is computationally expensive, we preserve the results for JTOPI, RTSI, FCHI, FTSE, and DAX across all different training models (M1, M2, and M3) for each method (VAR-deGARCH, and M-VAR-deGARCH).  
+## To show the result for different trained models M, show the file path   M1:D:/Yhat/2019/.   M2:D:/Yhat/2020/.    M3: D:/Yhat/2021/.
+
+## M1-JTOPI ##
+                                
+Unfixed<-read.csv("D:/Yhat/2019/南非/fixed_real return compare.csv")   # M-VAR-deGARCH
+VB_NAR<-read.csv("D:/Yhat/2019/南非/VBNAR return compare.csv")         # VAR-deGARCH
+Unit_time<-read.csv("D:/Yhat/2019/南非/unit_real return compare.csv") # ARMA-GARCH
+
+new_dataS.Africa<-data.frame(Date=as.Date(Unfixed[,1]),True=Unfixed[,3],ARMA_GARCH=Unit_time[,4],VAR_GARCH=VB_NAR[,4],M_VAR_GARCH=Unfixed[,4])
+                                
+## M1-RTSI ##
+                                
+Unfixed<-read.csv("D:/Yhat/2019/俄羅斯/fixed_real return compare.csv")   # M-VAR-deGARCH
+VB_NAR<-read.csv("D:/Yhat/2019/俄羅斯/VBNAR return compare.csv")         # VAR-deGARCH
+Unit_time<-read.csv("D:/Yhat/2019/俄羅斯/unit_real return compare.csv") # ARMA-GARCH
+
+new_dataRUS<-data.frame(Date=as.Date(Unfixed[,1]),True=Unfixed[,3],ARMA_GARCH=Unit_time[,4],VAR_GARCH=VB_NAR[,4],M_VAR_GARCH=Unfixed[,4])
+
+## M1-FCHI ##
+                                
+Unfixed<-read.csv("D:/Yhat/2019/法國/fixed_real return compare.csv")   # M-VAR-deGARCH
+VB_NAR<-read.csv("D:/Yhat/2019/法國/VBNAR return compare.csv")         # VAR-deGARCH
+Unit_time<-read.csv("D:/Yhat/2019/法國/unit_real return compare.csv") # ARMA-GARCH
+
+new_dataFR<-data.frame(Date=as.Date(Unfixed[,1]),True=Unfixed[,3],ARMA_GARCH=Unit_time[,4],VAR_GARCH=VB_NAR[,4],M_VAR_GARCH=Unfixed[,4])
+
+## M1-FTSE ##
+                                
+Unfixed<-read.csv("D:/Yhat/2019/英國/fixed_real return compare.csv")   # M-VAR-deGARCH
+VB_NAR<-read.csv("D:/Yhat/2019/英國/VBNAR return compare.csv")         # VAR-deGARCH
+Unit_time<-read.csv("D:/Yhat/2019/英國/unit_real return compare.csv") # ARMA-GARCH
+
+new_dataUK<-data.frame(Date=as.Date(Unfixed[,1]),True=Unfixed[,3],ARMA_GARCH=Unit_time[,4],VAR_GARCH=VB_NAR[,4],M_VAR_GARCH=Unfixed[,4])
+
+## M1-DAX ##
+                                
+Unfixed<-read.csv("D:/Yhat/2019/德國/fixed_real return compare.csv")   # M-VAR-deGARCH
+VB_NAR<-read.csv("D:/Yhat/2019/德國/VBNAR return compare.csv")         # VAR-deGARCH
+Unit_time<-read.csv("D:/Yhat/2019/德國/unit_real return compare.csv") # ARMA-GARCH
+
+new_dataBRD<-data.frame(Date=as.Date(Unfixed[,1]),True=Unfixed[,3],ARMA_GARCH=Unit_time[,4],VAR_GARCH=VB_NAR[,4],M_VAR_GARCH=Unfixed[,4])
+
+
+## To show the 1% percentile of the high-risk events
+
+
+new_data_clearS.Africa<- new_dataS.Africa[which(new_dataS.Africa[,2]<=high_risk1[,11]),]
+new_data_clearRUS<- new_dataRUS[which(new_dataRUS[,2]<=high_risk1[,12]),]
+new_data_clearFR<- new_dataFR[which(new_dataFR[,2]<=high_risk1[,13]),]
+new_data_clearUK<- new_dataUK[which(new_dataUK[,2]<=high_risk1[,14]),]
+new_data_clearBRD<- new_dataBRD[which(new_dataBRD[,2]<=high_risk1[,15]),]
+
+## caculate the ratio R in equation(11)
+                                
+attach(new_data_clearS.Africa)
+new_data_clearS.Africa1<-abs(data.frame(ARMA_GARCH=ARMA_GARCH-True,VAR_GARCH=VAR_GARCH-True,M_VAR_GARCH=M_VAR_GARCH-True))
+attach(new_data_clearS.Africa1)
+new_data_clearS.Africa1<-data.frame(ARMA_GARCH=ARMA_GARCH/M_VAR_GARCH, VAR_GARCH=VAR_GARCH/M_VAR_GARCH )
+attach(new_data_clearRUS)
+new_data_clearRUS1<-abs(data.frame(ARMA_GARCH=ARMA_GARCH-True,VAR_GARCH=VAR_GARCH-True,M_VAR_GARCH=M_VAR_GARCH-True))
+attach(new_data_clearRUS1)
+new_data_clearRUS1<-data.frame(ARMA_GARCH=ARMA_GARCH/M_VAR_GARCH, VAR_GARCH=VAR_GARCH/M_VAR_GARCH )
+attach(new_data_clearFR)
+new_data_clearFR1<-abs(data.frame(ARMA_GARCH=ARMA_GARCH-True,VAR_GARCH=VAR_GARCH-True,M_VAR_GARCH=M_VAR_GARCH-True))
+attach(new_data_clearFR1)
+new_data_clearFR1<-data.frame(ARMA_GARCH=ARMA_GARCH/M_VAR_GARCH, VAR_GARCH=VAR_GARCH/M_VAR_GARCH )
+attach(new_data_clearUK)
+new_data_clearUK1<-abs(data.frame(ARMA_GARCH=ARMA_GARCH-True,VAR_GARCH=VAR_GARCH-True,M_VAR_GARCH=M_VAR_GARCH-True))
+attach(new_data_clearUK1)
+new_data_clearUK1<-data.frame(ARMA_GARCH=ARMA_GARCH/M_VAR_GARCH, VAR_GARCH=VAR_GARCH/M_VAR_GARCH )
+attach(new_data_clearBRD)
+new_data_clearBRD1<-abs(data.frame(ARMA_GARCH=ARMA_GARCH-True,VAR_GARCH=VAR_GARCH-True,M_VAR_GARCH=M_VAR_GARCH-True))
+attach(new_data_clearBRD1)
+new_data_clearBRD1<-data.frame(ARMA_GARCH=ARMA_GARCH/M_VAR_GARCH, VAR_GARCH=VAR_GARCH/M_VAR_GARCH )
+                                
+                                
