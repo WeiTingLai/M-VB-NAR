@@ -9,7 +9,7 @@ rownames(VARData)[2123]  #2018/03/29
 rownames(VARData)[2380]  #2019/03/29
 rownames(VARData)[2638]  #2020/03/31
 rownames(VARData)[2890]  #2021/03/24
-
+###############################   the example for M1 training model with pi=0.001.
 p = 5;m = ncol(adjma);N = 2123 # 2123 2380 2638
 
 segment   <- c(rep(1,m)) 
@@ -34,6 +34,7 @@ mae       <- abs((Y_test-Y_hat))
 coef_beta <- fit$coef_beta
 
 ###########################  Table 3  #############################
+# Here shows the AIC in M1 with pi=0.001.
 
 AIC       <- (nrow(Y_train)*m)*log(sum((fit$Y-fit$X%*%matrix(fit$coef_beta,ncol=ncol(Y_train)))^2 )/(nrow(Y_train)*ncol(Y_train)))+2*ncol(Y_train)^2*p
 
@@ -72,15 +73,15 @@ mae_AR            <- abs((Y_test-Y_hat_VAR))
 end.time<-proc.time()-start.time
 
 #############################  Table 4  ###############################
-
-apply(  mspe     [c(1:257), ], 2 , mean )[11:15]    # 1:257  1:258  1:nrow(Y_test)
+##   M1-P1
+apply(  mspe     [c(1:257), ], 2 , mean )[11:15]    # 1:257  1:258  1:nrow(Y_test) 
 apply(  mspe_VAR [c(1:257), ], 2 , mean )[11:15]
 apply(  mspe_AR  [c(1:257), ], 2 , mean )[11:15]
 
 apply(  mspe     [c(1:257), ], 2 , sd )[11:15]
 apply(  mspe_VAR [c(1:257), ], 2 , sd )[11:15]
 apply(  mspe_AR  [c(1:257), ], 2 , sd )[11:15]
-
+##   M1-P2
 apply(  mspe     [c(258:516), ], 2 , mean )[11:15]    # 258：516  259:nrow(Y_test)
 apply(  mspe_VAR [c(258:516), ], 2 , mean )[11:15]
 apply(  mspe_AR  [c(258:516), ], 2 , mean )[11:15]
@@ -89,7 +90,7 @@ apply(  mspe     [c(258:516), ], 2 , sd )[11:15]
 apply(  mspe_VAR [c(258:516), ], 2 , sd )[11:15]
 apply(  mspe_AR  [c(258:516), ], 2 , sd )[11:15]
 
-
+##   M1-P3
 apply(  mspe     [c(517:nrow(Y_test)), ], 2 , mean )[11:15]
 apply(  mspe_VAR [c(517:nrow(Y_test)), ], 2 , mean )[11:15]
 apply(  mspe_AR  [c(517:nrow(Y_test)), ], 2 , mean )[11:15]
@@ -109,6 +110,7 @@ library(grid)
 brks        <- c( seq(-1,1, length.out = 22))
 rgb.palette <- colorRampPalette(c("red","white","blue"))
 
+##   M1-P1
 beta        <- apply( betahat[c(1:256), ], 2 , mean )
 beta        <- matrix( beta , ncol = m )
 
@@ -123,6 +125,7 @@ plt[[1]] <- levelplot(t(beta), at = brks, col.regions = rgb.palette, colorkey = 
                         , scales = list( draw = FALSE ) )
 plt[[1]]
 
+##   M1-P2
 beta        <- apply( betahat[ c(257:515), ], 2 , mean )
 beta        <- matrix( beta , ncol = m )
 
@@ -137,6 +140,7 @@ plt[[1]] <- levelplot(t(beta), at = brks, col.regions = rgb.palette, colorkey = 
                         , scales = list( draw = FALSE ) )
 plt[[1]]
 
+##   M1-P3
 beta        <- apply( betahat[ c(516:nrow(betahat)), ], 2 , mean )
 beta        <- matrix( beta , ncol = m )
 
