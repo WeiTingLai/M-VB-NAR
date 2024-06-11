@@ -173,7 +173,8 @@ for(i in 1:(nrow(Y_test)-1))
 
 # Since each method is computationally expensive, we preserve the results for JTOPI, RTSI, FCHI, FTSE, and DAX across all different training models (M1, M2, and M3) for each method (VAR-deGARCH, and M-VAR-deGARCH).  
 ## To show the result for different trained models M, show the file path   M1:D:/Yhat/2019/.   M2:D:/Yhat/2020/.    M3: D:/Yhat/2021/.
-
+## The example shows M1-P1, M1-P2, and M1-P3 in Figure 6
+                                 
 ## M1-JTOPI ##
                                 
 Unfixed   <- read.csv("D:/Yhat/2019/南非/fixed_real return compare.csv")    # M-VAR-deGARCH
