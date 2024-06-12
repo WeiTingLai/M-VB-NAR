@@ -89,11 +89,11 @@ new_data_clearS.Africa1 <- abs( data.frame( ARMA_GARCH = ARMA_GARCH-True , VAR_G
 attach(new_data_clearS.Africa1)
 new_data_clearS.Africa1 <- data.frame( ARMA_GARCH = ARMA_GARCH/M_VAR_GARCH , VAR_GARCH = VAR_GARCH/M_VAR_GARCH )
 S.Africa <- new_data_clearS.Africa1[c(1:3) , ]  # M1-P1 
-#S.Africa <- new_data_clearS.Africa1[c(4:9) , ] # M1-P2
+#S.Africa <- new_data_clearS.Africa1[c(4:9) , ] # M1-P2 ; M2-P2: c(1:6)
 
 S.Africa1 <- data.frame( ID = as.character( new_data_clearS.Africa$Date )[ c(1:3) ] , S.Africa[ , 2 ] )
 newdataS.Africa <- data.frame( Index = "JTOPI" , melt( S.Africa1 , id = c("ID") ) )
-#newdataS.Africa <-data.frame( Index = "JTOPI" , melt( data.frame( ID = "2020-06-11" , ARMA_GARCH = 0 , VAR_GARCH = 0 ) , id = c("ID") ) )   # M1-P3
+#newdataS.Africa <-data.frame( Index = "JTOPI" , melt( data.frame( ID = "2020-06-11" , ARMA_GARCH = 0 , VAR_GARCH = 0 ) , id = c("ID") ) )   # M1-P3 ; M2-P3 ; M3-P3
                                 
 ## RTSI
 attach(new_data_clearRUS)
@@ -101,11 +101,11 @@ new_data_clearRUS1 <- abs( data.frame( ARMA_GARCH = ARMA_GARCH-True , VAR_GARCH 
 attach(new_data_clearRUS1)
 new_data_clearRUS1 <- data.frame( ARMA_GARCH = ARMA_GARCH/M_VAR_GARCH , VAR_GARCH = VAR_GARCH/M_VAR_GARCH )
 RUS <- new_data_clearRUS1[c(1:2) , ]     # M1-P1
-#RUS <- new_data_clearRUS1[c(3:9) , ]    # M1-P2 
+#RUS <- new_data_clearRUS1[c(3:9) , ]    # M1-P2 ; M2-P2: c(1:7)
 
 RUS1 <- data.frame( ID = as.character(new_data_clearRUS$Date)[ c(1:2) ] , RUS[ , 2 ] )
 newdataRUS <- data.frame( Index = "RTSI" , melt( RUS1 , id = c("ID") ) )                               
-#newdataRUS <- data.frame( Index = "RUS" , melt( data.frame( ID = "2020-06-11" , ARMA_GARCH = 0 , VAR_GARCH = 0 ) , id = c("ID") ) )   # M1-P3
+#newdataRUS <- data.frame( Index = "RUS" , melt( data.frame( ID = "2020-06-11" , ARMA_GARCH = 0 , VAR_GARCH = 0 ) , id = c("ID") ) )   # M1-P3 ; M2-P3 ; M3-P3
                                 
 ## FCHI
 attach(new_data_clearFR)
@@ -113,8 +113,8 @@ new_data_clearFR1 <- abs( data.frame( ARMA_GARCH = ARMA_GARCH-True , VAR_GARCH =
 attach(new_data_clearFR1)
 new_data_clearFR1 <- data.frame( ARMA_GARCH = ARMA_GARCH/M_VAR_GARCH , VAR_GARCH = VAR_GARCH/M_VAR_GARCH )
 FR <- new_data_clearFR1[c(1:5) , ]        # M1-P1  
-#FR <- new_data_clearFR1[c(6:9) , ]       # M1-P2                                
-#FR <- new_data_clearFR1[c(10:11) , ]     # M1-P3
+#FR <- new_data_clearFR1[c(6:9) , ]       # M1-P2 ; M2-P2: c(1:4)                               
+#FR <- new_data_clearFR1[c(10:11) , ]     # M1-P3 ; M2-P3: c(5:6) ; M3-P3: c(1:2)
 
 FR1<-data.frame( ID = as.character( new_data_clearFR$Date)[ c(1:5) ] , FR[ , 2 ] )
 newdataFR<-data.frame( Index = "FCHI" , melt( FR1, id = c("ID") ) )
@@ -125,8 +125,8 @@ new_data_clearUK1 <- abs( data.frame( ARMA_GARCH = A RMA_GARCH-True , VAR_GARCH 
 attach(new_data_clearUK1)
 new_data_clearUK1 <- data.frame( ARMA_GARCH = ARMA_GARCH/M_VAR_GARCH , VAR_GARCH = VAR_GARCH/M_VAR_GARCH )
 UK <- new_data_clearUK1[c(1:2) , ]     # M1-P1  
-#UK <- new_data_clearUK1[c(3:8) , ]    # M1-P2
-#UK <- new_data_clearUK1[c(9:10) , ]   # M1-P3
+#UK <- new_data_clearUK1[c(3:8) , ]    # M1-P2 ; M2-P2: c(1:6)
+#UK <- new_data_clearUK1[c(9:10) , ]   # M1-P3 ; M2-P3: c(7:8) ; M3-P3: c(1:2)
                                 
 UK1 <- data.frame( ID = as.character( new_data_clearUK$Date)[ c(1:2) ] , UK[ , 2 ] )
 newdataUK <- data.frame( Index = "FTSE" , melt( UK1 , id = c("ID") ) ) 
@@ -137,11 +137,11 @@ new_data_clearBRD1 <- abs( data.frame( ARMA_GARCH = ARMA_GARCH-True , VAR_GARCH 
 attach(new_data_clearBRD1)
 new_data_clearBRD1 <- data.frame( ARMA_GARCH = ARMA_GARCH/M_VAR_GARCH , VAR_GARCH = VAR_GARCH/M_VAR_GARCH )
 BRD <- new_data_clearBRD1[c(1:2) , ]     # M1-P1
-#BRD <- new_data_clearBRD1[c(3:11) , ]   # M1-P2                               
+#BRD <- new_data_clearBRD1[c(3:11) , ]   # M1-P2 ; M2-P2: c(1:9)                              
 
 BRD1 <- data.frame( ID = as.character( new_data_clearBRD$Date)[ c(1:2) ] , BRD[ , 2 ] )
 newdataBRD <- data.frame( Index = "DAX" , melt( BRD1 , id = c("ID") ) )                                
-#newdataBRD <- data.frame( Index = "DAX" , melt( data.frame( ID = "2020-06-11" , ARMA_GARCH = 0 , VAR_GARCH = 0 ) , id = c("ID") ) )   # M1-P3
+#newdataBRD <- data.frame( Index = "DAX" , melt( data.frame( ID = "2020-06-11" , ARMA_GARCH = 0 , VAR_GARCH = 0 ) , id = c("ID") ) )   # M1-P3 ; M2-P3 ; M3-P3
 
 
 new_data <- rbind( newdataS.Africa , newdataRUS , newdataFR , newdataUK , newdataBRD )
