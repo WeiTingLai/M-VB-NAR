@@ -9,7 +9,7 @@ This folder contains the R code for the Variational Bayesian Inference function 
   + Since running 100 replications can be time-consuming, the result of the 100th replication is displayed in `Simulation.R`.
 * The code can reproduce all the simulation results in Section 5.
   + The required R packages include `mvtnorm`, `gtools`, `boot`, `psych`, `Matrix`, `MCMCpack`, `MASS`, `reshape`, `dplyr`, `RColorBrewer`, `lattice`, `gridExtra`, `ggplot2`, and `grid`.
-  + The `Empirical Study.R` script reproduces the results from Section 5 using the data in,  which contains degarch and normalized data.
+  + The `Empirical Study.R` script reproduces the results (M1-P1, M1-P2, and M1-P3 in Figure 5 and Table 4) from Section 5 using the data in,  which contains degarch and normalized data.
   + The degarch method applied to the `Empirical.csv` data was proposed by Huang et al. (2021).
   + Table 2 $(I(\boldsymbol{A}_0))$ uses data from `adjma.csv`.
   + To run the code in `Empirical Study.R`, you must first execute `VB_NAR.R` and `predict.VB_NAR.R`.
