@@ -102,8 +102,8 @@ apply(  mspe_AR  [c(517:nrow(Y_test)), ], 2 , sd )[11:15]
 ###########################  Figure 5  ##################################
 
 library("RColorBrewer")
-library("lattice")
 library("gridExtra")
+library("lattice")
 library("ggplot2")
 library("grid")
 
