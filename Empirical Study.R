@@ -68,7 +68,7 @@ for(i in 1:m)
   }
 }
 mspe_AR           <- (Y_test-Y_hat_AR)^2
-mae_AR            <- abs((Y_test-Y_hat_VAR))
+mae_AR            <- abs((Y_test-Y_hat_AR))
 
 end.time<-proc.time()-start.time
 
