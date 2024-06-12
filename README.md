@@ -9,11 +9,19 @@ This folder contains the R code for the Variational Bayesian Inference function 
   + Since running 100 replications can be time-consuming, the result of the 100th replication is displayed in `Simulation.R`.
 * The code can reproduce all the simulation results in Section 5.
   + The required R packages include `mvtnorm`, `gtools`, `boot`, `psych`, `Matrix`, `MCMCpack`, `MASS`, `RColorBrewer`, `lattice`, `gridExtra`, `ggplot2`, and `grid`.
-  + The `Empirical Study.R` script reproduces the results from Section 5. The data in `Empirical.csv`, which is degarch and normalized data.
-  + The degarch method is proposed by the Huang et al. (2021)
-  + The Table 2 $(I(\boldsymbol{A}_0))$ is the data in `adjma.csv`
-  + To run the code in `Empirical Study.R`, we must first execute `VB_NAR.R` and `predict.VB_NAR.R`.
-  + Since running all cases can be time-consuming, the result of training period M1 for M-VAR-deGARCH, VAR-deGARCH, and ARMA-GARCH are displayed in `Empirical Study.R`.
+  + The `Empirical Study.R` script reproduces the results from Section 5 using the data in `Empirical.csv`,  which contains degarch and normalized data.
+  + The degarch method is proposed by Huang et al. (2021).
+  + able 2 $(I(\boldsymbol{A}_0))$ uses data from `adjma.csv`.
+  + To run the code in `Empirical Study.R`, you must first execute `VB_NAR.R` and `predict.VB_NAR.R`.
+  + Since running all cases can be time-consuming, the results of the training period M1 for M-VAR-deGARCH, VAR-deGARCH (Lai et al., 2022), and ARMA-GARCH are displayed in `Empirical Study.R`.
+  + The file `Empirical Study_Figure 6.R` contains the code to generate Figure 6 (M1-P1, M1-P2, and M1-P3).
+  + Because running all cases can be time-consuming, we save the forecast returns for JTOPI, RTSI, FCHI, FTSE, and DAX across all different training models (M1, M2, and M3) for each method (ARMA-GARCH, VAR-deGARCH, and M-VAR-deGARCH) in the file `Yhat`.
+  + The forecast returns for M1 are in `Yhat/2019/.`, for M2 in `Yhat/2020/.`, and for M3 in `Yhat/2021/.`.
+  + In `Empirical Study_Figure 6.R`, the required R packages include `reshape`, `dplyr`, `RColorBrewer`, `lattice`, `gridExtra`, `ggplot2`, and `grid`.
+  + The robustness check in Section 5.3 (Table 6) is shown in `Roubust check KAPPA.R`.
+  + The data for the lag-0 coefficient matrix in Case 1, Case 2, and Case 3 are saved in the `coefficient matrix`.
+    
 # Reference:
 * Huang, S. F.*, Chiang, H. H. and Lin, Y. J. (2021). A network autoregressive model with GARCH effects and its applications. PLOS ONE, 16, e0255422.
+* Lai, W. T., Chen, R. B., Chen, Y., & Koch, T. (2022). Variational Bayesian inference for network autoregression models. Computational Statistics & Data Analysis, 169, 107406.
      
