@@ -33,41 +33,41 @@ for(i in 1:(nrow(Y_test)-1))
                                  
 ## M1-JTOPI ##
                                 
-Unfixed   <- read.csv("D:/Yhat/2019/南非/fixed_real return compare.csv")    # M-VAR-deGARCH
-VB_NAR    <- read.csv("D:/Yhat/2019/南非/VBNAR return compare.csv")         # VAR-deGARCH
-Unit_time <- read.csv("D:/Yhat/2019/南非/unit_real return compare.csv")     # ARMA-GARCH
+Unfixed   <- read.csv("D:/Yhat/2019/JTOPI/unfixed_real return compare.csv")    # M-VAR-deGARCH
+VB_NAR    <- read.csv("D:/Yhat/2019/JTOPI/VBNAR return compare.csv")         # VAR-deGARCH
+Unit_time <- read.csv("D:/Yhat/2019/JTOPI/unit_real return compare.csv")     # ARMA-GARCH
 
 new_dataS.Africa <- data.frame( Date = as.Date(Unfixed[,1]) , True = Unfixed[,3] , ARMA_GARCH = Unit_time[,4] , VAR_GARCH = VB_NAR[,4] , M_VAR_GARCH = Unfixed[,4] )
                                 
 ## M1-RTSI ##
                                 
-Unfixed   <- read.csv("D:/Yhat/2019/俄羅斯/fixed_real return compare.csv")   # M-VAR-deGARCH
-VB_NAR    <- read.csv("D:/Yhat/2019/俄羅斯/VBNAR return compare.csv")        # VAR-deGARCH
-Unit_time <- read.csv("D:/Yhat/2019/俄羅斯/unit_real return compare.csv")    # ARMA-GARCH
+Unfixed   <- read.csv("D:/Yhat/2019/RTSI/unfixed_real return compare.csv")   # M-VAR-deGARCH
+VB_NAR    <- read.csv("D:/Yhat/2019/RTSI/VBNAR return compare.csv")        # VAR-deGARCH
+Unit_time <- read.csv("D:/Yhat/2019/RTSI/unit_real return compare.csv")    # ARMA-GARCH
 
 new_dataRUS <- data.frame( Date = as.Date(Unfixed[,1]) , True = Unfixed[,3] , ARMA_GARCH = Unit_time[,4] , VAR_GARCH = VB_NAR[,4] , M_VAR_GARCH = Unfixed[,4] )
 
 ## M1-FCHI ##
                                 
-Unfixed   <- read.csv("D:/Yhat/2019/法國/fixed_real return compare.csv")   # M-VAR-deGARCH
-VB_NAR    <- read.csv("D:/Yhat/2019/法國/VBNAR return compare.csv")        # VAR-deGARCH
-Unit_time <- read.csv("D:/Yhat/2019/法國/unit_real return compare.csv")    # ARMA-GARCH
+Unfixed   <- read.csv("D:/Yhat/2019/FCHI/unfixed_real return compare.csv")   # M-VAR-deGARCH
+VB_NAR    <- read.csv("D:/Yhat/2019/FCHI/VBNAR return compare.csv")        # VAR-deGARCH
+Unit_time <- read.csv("D:/Yhat/2019/FCHI/unit_real return compare.csv")    # ARMA-GARCH
 
 new_dataFR < -data.frame( Date = as.Date(Unfixed[,1]) , True = Unfixed[,3] , ARMA_GARCH = Unit_time[,4] , VAR_GARCH = VB_NAR[,4] , M_VAR_GARCH = Unfixed[,4] )
 
 ## M1-FTSE ##
                                 
-Unfixed   <- read.csv("D:/Yhat/2019/英國/fixed_real return compare.csv")   # M-VAR-deGARCH
-VB_NAR    <- read.csv("D:/Yhat/2019/英國/VBNAR return compare.csv")        # VAR-deGARCH
-Unit_time <- read.csv("D:/Yhat/2019/英國/unit_real return compare.csv")    # ARMA-GARCH
+Unfixed   <- read.csv("D:/Yhat/2019/FTSE/unfixed_real return compare.csv")   # M-VAR-deGARCH
+VB_NAR    <- read.csv("D:/Yhat/2019/FTSE/VBNAR return compare.csv")        # VAR-deGARCH
+Unit_time <- read.csv("D:/Yhat/2019/FTSE/unit_real return compare.csv")    # ARMA-GARCH
 
 new_dataUK <- data.frame( Date = as.Date(Unfixed[,1]) , True = Unfixed[,3] , ARMA_GARCH = Unit_time[,4] , VAR_GARCH = VB_NAR[,4] , M_VAR_GARCH = Unfixed[,4] )
 
 ## M1-DAX ##
                                 
-Unfixed   <- read.csv("D:/Yhat/2019/德國/fixed_real return compare.csv")   # M-VAR-deGARCH
-VB_NAR    <- read.csv("D:/Yhat/2019/德國/VBNAR return compare.csv")        # VAR-deGARCH
-Unit_time <- read.csv("D:/Yhat/2019/德國/unit_real return compare.csv")    # ARMA-GARCH
+Unfixed   <- read.csv("D:/Yhat/2019/DAX/unfixed_real return compare.csv")   # M-VAR-deGARCH
+VB_NAR    <- read.csv("D:/Yhat/2019/DAX/VBNAR return compare.csv")        # VAR-deGARCH
+Unit_time <- read.csv("D:/Yhat/2019/DAX/unit_real return compare.csv")    # ARMA-GARCH
 
 new_dataBRD <- data.frame( Date = as.Date(Unfixed[,1]) , True = Unfixed[,3] , ARMA_GARCH = Unit_time[,4] , VAR_GARCH = VB_NAR[,4] , M_VAR_GARCH = Unfixed[,4] )
 
